@@ -578,10 +578,12 @@ function Stats({ slide }: { slide: DeckSlide }) {
 /** The default body of a slide, chosen by its `layout`. */
 export function SlideContent({
   slide,
+  index = 0,
   active,
   presenting = false,
 }: {
   slide: DeckSlide;
+  index?: number;
   active: boolean;
   presenting?: boolean;
 }) {
@@ -593,9 +595,13 @@ export function SlideContent({
     slide.actions?.length ||
     slide.media?.length
   );
+  const visual =
+    typeof slide.visual === "function"
+      ? slide.visual({ index, active, presenting })
+      : slide.visual;
   const media = (
     <>
-      {slide.visual}
+      {visual}
       {slide.code && <CodeListing code={slide.code} />}
       <SlideMedia
         media={slide.media}
@@ -651,7 +657,7 @@ export function SlideContent({
           <div className="sp-split sp-impact-layout">
             {copy}
             <div className="sp-impact">
-              {slide.visual}
+              {visual}
               <Stats slide={slide} />
               {slide.details?.[0] && (
                 <aside className="sp-impact-fact">

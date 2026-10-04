@@ -164,7 +164,7 @@ A slide is an object. Only `id` and `title` are required.
 | `stats`                             | big numbers for `metric`                                                        |
 | `details`                           | expandable "more context" under the slide                                       |
 | `code`                              | a code listing in the media column: `{ filename, source }`                      |
-| `visual`                            | any React node in the media column                                              |
+| `visual`                            | a component in the media column, or `({ active, presenting }) => …`             |
 | `render`                            | replace the slide body entirely: `({ index, active, presenting }) => …`         |
 | `backgroundOptions`                 | backgrounds the tuner offers for this slide                                     |
 
@@ -175,7 +175,36 @@ Items can name a built-in icon (`link`, `phone`, `accessibility`, `keyboard`,
 `play`, `zap`, `code`, `sliders`, `image`, `globe`, `users`, `check`, `chart`,
 `lock`), so deck files need no imports beyond `defineDeck`. Deck-level
 `description` and `accentColor` feed the page head, `DeckIndex` and the
-controls.
+controls, and `image` becomes the link-preview image (`og:image`).
+
+### Decks with their own components
+
+A deck can be a `.tsx` module that brings its own components and their
+dependencies. slidepig only places them:
+
+```tsx
+import { defineDeck } from "slidepig";
+import { Bot } from "lucide-react";
+import { Globe } from "./globe"; // ships its own dependencies
+import "./my-deck.css"; // scope it with [data-deck="my-deck"] or slide ids
+
+export default defineDeck({
+  title: "Our pitch",
+  image: "/og.png",
+  icons: { bot: <Bot size={18} /> }, // names items can use, deck-local
+  slides: [
+    { id: "reach", title: "Global reach", layout: "metric", visual: <Globe /> },
+    {
+      id: "demo",
+      title: "Try it",
+      // Receives live state, e.g. to pause while another slide is on stage.
+      visual: ({ active, presenting }) => (
+        <Demo running={active || !presenting} />
+      ),
+    },
+  ],
+});
+```
 
 ## `<Deck>` props
 

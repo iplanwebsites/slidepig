@@ -121,8 +121,12 @@ export type DeckSlide<
   accentColor?: string;
   media?: MediaId[];
   mediaDisplay?: DeckMediaDisplay;
-  /** Any React node, rendered in the media column. The escape hatch. */
-  visual?: ReactNode;
+  /**
+   * Any React node, rendered in the media column: the place for components
+   * with their own dependencies (a globe, a live demo). Pass a function to
+   * receive the slide's live state, e.g. to pause an animation off-stage.
+   */
+  visual?: ReactNode | ((context: DeckSlideContext) => ReactNode);
   /** A code listing shown in the media column. */
   code?: DeckCode;
   stats?: { value: string; label: string; href?: string }[];
@@ -174,6 +178,16 @@ export type Deck<
   accentColor?: string;
   /** Shown above the first slide in reading mode only. */
   intro?: DeckIntro;
+  /**
+   * Link-preview image (`og:image`), as a URL like a media `src`. Rendered
+   * absolute when the site knows its origin.
+   */
+  image?: string;
+  /**
+   * Icons that this deck's items name with `icon`, so a deck can ship its
+   * own. `<Deck icons>` still wins over them.
+   */
+  icons?: Record<string, ReactNode>;
   // Names are inferred from the registries below, never from slides, so a
   // slide naming something that does not exist is reported at that slide.
   slides: DeckSlide<

@@ -49,4 +49,50 @@ describe("renderDeckDocument", () => {
     expect(html).toContain('id="two"');
     expect(html).toContain('<script type="module" src="/client.js"></script>');
   });
+
+  it("uses the deck's image for link previews, absolute and as JPEG", () => {
+    const html = renderDeckDocument(
+      {
+        deck: { ...deck, image: "/og.png" },
+        resolver: {
+          image: (src) => ({ src: src ?? "", sources: [] }),
+          url: (src, options) =>
+            options?.formats?.includes("jpeg") ? "/_media/og-1200.jpg" : src!,
+        },
+      },
+      { canonical: "https://decks.example.com/q/" },
+    );
+    expect(html).toContain(
+      '<meta property="og:image" content="https://decks.example.com/_media/og-1200.jpg">',
+    );
+    expect(html).toContain('name="twitter:card" content="summary_large_image"');
+  });
+
+  it("renders function visuals with the slide's state and deck icons", () => {
+    const html = renderDeckDocument({
+      deck: defineDeck({
+        title: "Live",
+        icons: { bolt: <svg data-icon="bolt" /> },
+        slides: [
+          {
+            id: "a",
+            title: "A",
+            visual: ({ index, active, presenting }) => (
+              <p data-visual={`${index}:${active}:${presenting}`} />
+            ),
+          },
+          {
+            id: "b",
+            title: "B",
+            layout: "groups",
+            itemGroups: [
+              { title: "G", items: [{ title: "I", text: "T", icon: "bolt" }] },
+            ],
+          },
+        ],
+      }),
+    });
+    expect(html).toMatch(/data-visual="0:(true|false):false"/);
+    expect(html).toContain('data-icon="bolt"');
+  });
 });

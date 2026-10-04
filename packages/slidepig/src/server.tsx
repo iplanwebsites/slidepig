@@ -119,6 +119,8 @@ export function renderDeckDocument(
     ...options,
     title: options.title ?? deck.title,
     description: options.description ?? deck.description,
+    image:
+      options.image ?? deckImage(deck.image, props.resolver, options.canonical),
     lang: deck.lang ?? options.lang ?? "en",
     rootId: options.rootId ?? "deck",
     preload: getDeckPreloadLinks(deck, {
@@ -128,6 +130,21 @@ export function renderDeckDocument(
     }),
     body: renderDeck(props),
   });
+}
+
+/**
+ * The deck's link-preview image: the JPEG or PNG derivative when the image
+ * pipeline made one (link previews rarely accept AVIF), made absolute
+ * against the page URL when it is known.
+ */
+function deckImage(
+  src: string | undefined,
+  resolver: DeckProps["resolver"],
+  pageUrl: string | undefined,
+): string | undefined {
+  if (!src) return undefined;
+  const url = resolver?.url?.(src, { formats: ["jpeg", "png"] }) ?? src;
+  return pageUrl ? new URL(url, pageUrl).toString() : url;
 }
 
 function preloadTag(link: SlideAssetPreloadLink): string {

@@ -111,10 +111,10 @@ export function Deck({
       media: deck.media ?? {},
       resolver,
       labels,
-      icons: icons ? { ...slideIcons, ...icons } : slideIcons,
+      icons: { ...slideIcons, ...deck.icons, ...icons },
       mediaSizes,
     }),
-    [deck.media, resolver, labels, icons, mediaSizes],
+    [deck.media, deck.icons, resolver, labels, icons, mediaSizes],
   );
   const slides = useMemo(
     () => getDeckSlides(deck, resolver, mediaSizes),
@@ -298,6 +298,7 @@ export function Deck({
                   ) : (
                     <SlideContent
                       slide={slide}
+                      index={index}
                       active={active}
                       presenting={presenting}
                     />
