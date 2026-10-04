@@ -14,7 +14,9 @@ let out =
 for (const name of bundled) {
   const base = from[name] ? createRequire(path.join(from[name], "x")) : require;
   const dir = path.dirname(base.resolve(`${name}/package.json`));
-  const pkg = JSON.parse(await readFile(path.join(dir, "package.json"), "utf8"));
+  const pkg = JSON.parse(
+    await readFile(path.join(dir, "package.json"), "utf8"),
+  );
   const file = (await readdir(dir)).find((f) => /^licen[cs]e/i.test(f));
   if (!file) throw new Error(`[slidepig] no license file for ${name}`);
   const text = (await readFile(path.join(dir, file), "utf8")).trim();
