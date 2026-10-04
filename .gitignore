@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+# Generated image derivatives. The manifest that points at them is committed.
+apps/*/public/_media/
+dist-server/
+.wrangler/
+packages/slidepig/template/
+
+# Private deployment configuration, kept out of the public repository.
+_internal/

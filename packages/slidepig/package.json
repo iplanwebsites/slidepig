@@ -1,0 +1,185 @@
+{
+  "name": "slidepig",
+  "version": "0.1.0",
+  "description": "Web-native presentations: one page that reads like a document and presents like a slideshow. Embed a deck, or build a prerendered site of decks.",
+  "keywords": [
+    "slides",
+    "slideshow",
+    "presentation",
+    "deck",
+    "react",
+    "pitch",
+    "prerender",
+    "cloudflare-workers"
+  ],
+  "license": "BUSL-1.1",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "bin",
+    "dist",
+    "template",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "slidepig-source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./core": {
+      "slidepig-source": "./src/core/index.ts",
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./react": {
+      "slidepig-source": "./src/react/index.ts",
+      "types": "./dist/react/index.d.ts",
+      "default": "./dist/react/index.js"
+    },
+    "./media": {
+      "slidepig-source": "./src/media/index.ts",
+      "types": "./dist/media/index.d.ts",
+      "default": "./dist/media/index.js"
+    },
+    "./images": {
+      "slidepig-source": "./src/images/index.ts",
+      "types": "./dist/images/index.d.ts",
+      "default": "./dist/images/index.js"
+    },
+    "./client": {
+      "slidepig-source": "./src/client.tsx",
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
+    },
+    "./server": {
+      "slidepig-source": "./src/server.tsx",
+      "types": "./dist/server.d.ts",
+      "default": "./dist/server.js"
+    },
+    "./site": {
+      "slidepig-source": "./src/site/index.ts",
+      "types": "./dist/site/index.d.ts",
+      "default": "./dist/site/index.js"
+    },
+    "./site/client": {
+      "slidepig-source": "./src/site/client.ts",
+      "types": "./dist/site/client.d.ts",
+      "default": "./dist/site/client.js"
+    },
+    "./site/render": {
+      "slidepig-source": "./src/site/render.tsx",
+      "types": "./dist/site/render.d.ts",
+      "default": "./dist/site/render.js"
+    },
+    "./site/worker": {
+      "slidepig-source": "./src/site/worker.ts",
+      "types": "./dist/site/worker.d.ts",
+      "default": "./dist/site/worker.js"
+    },
+    "./site/vite": {
+      "types": "./dist/site/vite.d.ts",
+      "default": "./dist/site/vite.js"
+    },
+    "./site/build": {
+      "types": "./dist/site/build.d.ts",
+      "default": "./dist/site/build.js"
+    },
+    "./assets": {
+      "types": "./dist/assets/index.d.ts",
+      "default": "./dist/assets/index.js"
+    },
+    "./assets/config": {
+      "types": "./dist/assets/config.d.ts",
+      "default": "./dist/assets/config.js"
+    },
+    "./styles.css": {
+      "slidepig-source": "./src/styles.css",
+      "default": "./dist/styles.css"
+    },
+    "./controls.css": {
+      "slidepig-source": "./src/styles/controls.css",
+      "default": "./dist/styles/controls.css"
+    },
+    "./media.css": {
+      "slidepig-source": "./src/styles/media.css",
+      "default": "./dist/styles/media.css"
+    },
+    "./deck.css": {
+      "slidepig-source": "./src/styles/deck.css",
+      "default": "./dist/styles/deck.css"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsup && cp src/styles.css dist/ && cp -R src/styles dist/",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "size": "node scripts/check-size.mjs",
+    "template": "node scripts/sync-template.mjs",
+    "smoke": "node scripts/sync-template.mjs && node scripts/smoke-test.mjs",
+    "prepack": "node scripts/sync-template.mjs",
+    "prepublishOnly": "pnpm run build && pnpm run size"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vite": "^7.0.0",
+    "sharp": ">=0.33.0",
+    "html-validate": ">=9.0.0",
+    "linkedom": ">=0.18.0",
+    "tsx": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.9",
+    "esbuild": "^0.25.0",
+    "@types/node": "^22",
+    "@types/picomatch": "^4.0.2",
+    "picomatch": "^4.0.3",
+    "tinyglobby": "^0.2.15",
+    "sharp": "^0.34.4",
+    "html-validate": "^10",
+    "linkedom": "^0.18",
+    "vite": "^7.2.0",
+    "tsx": "^4.20.6"
+  },
+  "bin": {
+    "slidepig": "./bin/slidepig.js"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    },
+    "sharp": {
+      "optional": true
+    },
+    "html-validate": {
+      "optional": true
+    },
+    "linkedom": {
+      "optional": true
+    },
+    "tsx": {
+      "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iplanwebsites/slidepig.git",
+    "directory": "packages/slidepig"
+  },
+  "homepage": "https://github.com/iplanwebsites/slidepig#readme",
+  "bugs": {
+    "url": "https://github.com/iplanwebsites/slidepig/issues"
+  }
+}

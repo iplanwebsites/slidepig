@@ -1,0 +1,277 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-04T21:30:26.037Z",
+  "publicPath": "/_media",
+  "entries": {
+    "/art/night-stack.jpg": {
+      "src": "/_media/art/night-stack.c29b5539-1920w.jpg",
+      "width": 2400,
+      "height": 1500,
+      "hasAlpha": false,
+      "placeholder": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAABwAgCdASoUAAwAA4BaJQBhQCFTE0FlYOuCM4AAAP73eZvzaDlv+gOveqjVjcAudj12Mm06FXywUYiRABvObTZ/AAA=",
+      "variants": [
+        {
+          "format": "avif",
+          "width": 640,
+          "url": "/_media/art/night-stack.c29b5539-640w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1024,
+          "url": "/_media/art/night-stack.c29b5539-1024w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "url": "/_media/art/night-stack.c29b5539-1440w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1920,
+          "url": "/_media/art/night-stack.c29b5539-1920w.avif"
+        },
+        {
+          "format": "webp",
+          "width": 640,
+          "url": "/_media/art/night-stack.c29b5539-640w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1024,
+          "url": "/_media/art/night-stack.c29b5539-1024w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "url": "/_media/art/night-stack.c29b5539-1440w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1920,
+          "url": "/_media/art/night-stack.c29b5539-1920w.webp"
+        },
+        {
+          "format": "jpeg",
+          "width": 1920,
+          "url": "/_media/art/night-stack.c29b5539-1920w.jpg"
+        }
+      ]
+    },
+    "/art/paper-lines.jpg": {
+      "src": "/_media/art/paper-lines.b47f42b0-1920w.jpg",
+      "width": 2400,
+      "height": 1500,
+      "hasAlpha": false,
+      "placeholder": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAgCdASoUAAwAPu1iqk2ppaQiMAgBMB2JZwAAhSoAAP7wYfQzPHmpzbyTUfsjLzazQAAA",
+      "variants": [
+        {
+          "format": "avif",
+          "width": 640,
+          "url": "/_media/art/paper-lines.b47f42b0-640w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1024,
+          "url": "/_media/art/paper-lines.b47f42b0-1024w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "url": "/_media/art/paper-lines.b47f42b0-1440w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1920,
+          "url": "/_media/art/paper-lines.b47f42b0-1920w.avif"
+        },
+        {
+          "format": "webp",
+          "width": 640,
+          "url": "/_media/art/paper-lines.b47f42b0-640w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1024,
+          "url": "/_media/art/paper-lines.b47f42b0-1024w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "url": "/_media/art/paper-lines.b47f42b0-1440w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1920,
+          "url": "/_media/art/paper-lines.b47f42b0-1920w.webp"
+        },
+        {
+          "format": "jpeg",
+          "width": 1920,
+          "url": "/_media/art/paper-lines.b47f42b0-1920w.jpg"
+        }
+      ]
+    },
+    "/art/stage-light.jpg": {
+      "src": "/_media/art/stage-light.6d560f51-1920w.jpg",
+      "width": 2400,
+      "height": 1500,
+      "hasAlpha": false,
+      "placeholder": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAwCdASoUAAwAPu1yrU+pp6QiMAgBMB2JYwCo9CG77JFYnf/kpEAA/vDEaGTY5eKA4fHN7zL3FAnOwRcAAA==",
+      "variants": [
+        {
+          "format": "avif",
+          "width": 640,
+          "url": "/_media/art/stage-light.6d560f51-640w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1024,
+          "url": "/_media/art/stage-light.6d560f51-1024w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "url": "/_media/art/stage-light.6d560f51-1440w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1920,
+          "url": "/_media/art/stage-light.6d560f51-1920w.avif"
+        },
+        {
+          "format": "webp",
+          "width": 640,
+          "url": "/_media/art/stage-light.6d560f51-640w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1024,
+          "url": "/_media/art/stage-light.6d560f51-1024w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "url": "/_media/art/stage-light.6d560f51-1440w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1920,
+          "url": "/_media/art/stage-light.6d560f51-1920w.webp"
+        },
+        {
+          "format": "jpeg",
+          "width": 1920,
+          "url": "/_media/art/stage-light.6d560f51-1920w.jpg"
+        }
+      ]
+    },
+    "/art/sunrise.jpg": {
+      "src": "/_media/art/sunrise.b76d102c-1920w.jpg",
+      "width": 2400,
+      "height": 1500,
+      "hasAlpha": false,
+      "placeholder": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAwAwCdASoUAAwAPu1iqU2ppaOiMAgBMB2JQBOgBaDzhp8AAP7v2imiJxKxC9ILmGPB0P2KBUq49fsp1b2+tUd/AAAAAA==",
+      "variants": [
+        {
+          "format": "avif",
+          "width": 640,
+          "url": "/_media/art/sunrise.b76d102c-640w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1024,
+          "url": "/_media/art/sunrise.b76d102c-1024w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "url": "/_media/art/sunrise.b76d102c-1440w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1920,
+          "url": "/_media/art/sunrise.b76d102c-1920w.avif"
+        },
+        {
+          "format": "webp",
+          "width": 640,
+          "url": "/_media/art/sunrise.b76d102c-640w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1024,
+          "url": "/_media/art/sunrise.b76d102c-1024w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "url": "/_media/art/sunrise.b76d102c-1440w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1920,
+          "url": "/_media/art/sunrise.b76d102c-1920w.webp"
+        },
+        {
+          "format": "jpeg",
+          "width": 1920,
+          "url": "/_media/art/sunrise.b76d102c-1920w.jpg"
+        }
+      ]
+    },
+    "/art/two-modes.jpg": {
+      "src": "/_media/art/two-modes.4927c669-1920w.jpg",
+      "width": 2400,
+      "height": 1500,
+      "hasAlpha": false,
+      "placeholder": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAAAQAgCdASoUAAwAA4BaJZwDCgEO/gLSBNgAAP73BrTmLCkJZvDM3/d5dxIeJxGt0TVxhMpthA6icosAUlAAAA==",
+      "variants": [
+        {
+          "format": "avif",
+          "width": 640,
+          "url": "/_media/art/two-modes.4927c669-640w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1024,
+          "url": "/_media/art/two-modes.4927c669-1024w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1440,
+          "url": "/_media/art/two-modes.4927c669-1440w.avif"
+        },
+        {
+          "format": "avif",
+          "width": 1920,
+          "url": "/_media/art/two-modes.4927c669-1920w.avif"
+        },
+        {
+          "format": "webp",
+          "width": 640,
+          "url": "/_media/art/two-modes.4927c669-640w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1024,
+          "url": "/_media/art/two-modes.4927c669-1024w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1440,
+          "url": "/_media/art/two-modes.4927c669-1440w.webp"
+        },
+        {
+          "format": "webp",
+          "width": 1920,
+          "url": "/_media/art/two-modes.4927c669-1920w.webp"
+        },
+        {
+          "format": "jpeg",
+          "width": 1920,
+          "url": "/_media/art/two-modes.4927c669-1920w.jpg"
+        }
+      ]
+    }
+  }
+}

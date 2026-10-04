@@ -1,0 +1,31 @@
+{
+  "name": "slidepig-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 4900",
+    "build": "slidepig assets && vite build",
+    "new": "slidepig new",
+    "assets": "slidepig assets",
+    "assets:check": "slidepig assets --check",
+    "preview": "wrangler dev --port 4901",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "art": "node scripts/make-art.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "slidepig": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261001.1",
+    "@types/react": "^19.0.0",
+    "html-validate": "^10",
+    "linkedom": "^0.18",
+    "sharp": "^0.34.4",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.0",
+    "wrangler": "^4"
+  }
+}

@@ -1,0 +1,28 @@
+/* The host site's own styles. slidepig's classes are all prefixed sp-. */
+body {
+  margin: 0;
+  font-family: Georgia, serif;
+  color: #1b1b1b;
+}
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid #ddd;
+}
+.site-header a {
+  color: inherit;
+}
+.site-main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+.site-main-wide {
+  max-width: none;
+  padding-inline: 0;
+}
+.site-main-wide > h1,
+.site-main-wide > p {
+  padding-inline: 24px;
+}
