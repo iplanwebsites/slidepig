@@ -24,6 +24,7 @@ export type DeckLabels = {
   mediaMissing: (kind: "image" | "video" | "embed") => string;
   playDemo: string;
   play: (title: string) => string;
+  /** @deprecated Unused: action lists sit inside the labelled slide. */
   actions: string;
   stats: string;
   slideCount: (count: number) => string;

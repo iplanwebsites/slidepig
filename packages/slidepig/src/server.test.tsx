@@ -95,4 +95,40 @@ describe("renderDeckDocument", () => {
     expect(html).toMatch(/data-visual="0:(true|false):false"/);
     expect(html).toContain('data-icon="bolt"');
   });
+
+  it("serves carousel images through the resolver, without labelled lists", () => {
+    const html = renderDeckDocument({
+      deck: defineDeck({
+        title: "Gallery",
+        media: {
+          a: { title: "A", kind: "image", src: "/a.png" },
+          b: { title: "B", kind: "image", src: "/b.png" },
+        },
+        slides: [
+          {
+            id: "g",
+            title: "G",
+            media: ["a", "b"],
+            mediaDisplay: { mode: "carousel" },
+            actions: [{ kind: "link", label: "More", href: "/more" }],
+          },
+        ],
+      }),
+      resolver: {
+        image: (src) => ({
+          src: src ?? "",
+          srcSet: `${src}?w=640 640w`,
+          sizes: "100vw",
+          sources: [{ type: "image/avif", srcSet: `${src}.avif 640w` }],
+        }),
+      },
+    });
+    expect(html).toContain(
+      '<source type="image/avif" srcSet="/a.png.avif 640w"/>',
+    );
+    expect(html).toMatch(
+      /class="sp-carousel-image"[^>]*srcSet="\/a\.png\?w=640 640w"/,
+    );
+    expect(html).toContain('<ul class="sp-action-cards">');
+  });
 });

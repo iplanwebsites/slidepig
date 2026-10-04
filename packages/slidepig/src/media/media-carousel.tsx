@@ -6,8 +6,14 @@ export type MediaCarouselFit = "intrinsic" | "contain" | "cover";
 
 export type MediaCarouselItem = {
   id: string;
+  /** The fallback URL, and what the lightbox opens. */
   src: string;
   alt: string;
+  /** Responsive candidates for `src`, e.g. from an image resolver. */
+  srcSet?: string;
+  sizes?: string;
+  /** Modern formats (AVIF, WebP), offered through `<picture>`. */
+  sources?: readonly { type: string; srcSet: string; sizes?: string }[];
   caption?: ReactNode;
   width?: number;
   height?: number;
@@ -179,11 +185,14 @@ export function MediaCarousel({
         >
           {items.map((item, index) => {
             const isActive = index === activeIndex;
-            return (
+            const image = (
               <img
                 key={item.id}
                 className="sp-carousel-image"
                 src={item.src}
+                srcSet={item.srcSet}
+                sizes={item.srcSet ? item.sizes : undefined}
+                decoding="async"
                 alt={isActive ? item.alt : ""}
                 aria-hidden={!isActive}
                 data-active={isActive ? "true" : undefined}
@@ -192,6 +201,22 @@ export function MediaCarousel({
                 loading={index === 0 ? "eager" : "lazy"}
                 onLoad={(event) => measureImage(item, event)}
               />
+            );
+            return item.sources?.length ? (
+              // `display: contents` keeps the <img> as the positioned box.
+              <picture key={item.id} style={{ display: "contents" }}>
+                {item.sources.map((source) => (
+                  <source
+                    key={source.type}
+                    type={source.type}
+                    srcSet={source.srcSet}
+                    sizes={source.sizes}
+                  />
+                ))}
+                {image}
+              </picture>
+            ) : (
+              image
             );
           })}
           {lightbox && (

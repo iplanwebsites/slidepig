@@ -107,7 +107,7 @@ export function ActionCards({
 
   return (
     <>
-      <ul className="sp-action-cards" aria-label={labels.actions}>
+      <ul className="sp-action-cards">
         {actions.map((action) => (
           <li key={action.kind === "video" ? action.media : action.href}>
             {action.kind === "video" ? (
@@ -486,17 +486,21 @@ export function SlideMedia({
   active: boolean;
   presenting: boolean;
 }) {
-  const { media: registry, labels } = useDeckRuntime();
+  const { media: registry, labels, resolver, mediaSizes } = useDeckRuntime();
   // A lightbox inside a phone-sized carousel only gets in the way of swiping.
   const narrow = useNarrowViewport();
 
   const carouselItems = media?.flatMap((id) => {
     const item = registry[id];
     if (item?.kind !== "image" || !item.src) return [];
+    const image = resolver.image(item.src, { sizes: mediaSizes });
     return [
       {
         id,
         src: item.src,
+        srcSet: image.srcSet,
+        sizes: image.sizes,
+        sources: image.sources,
         alt: item.alt ?? item.title,
         caption: <MediaLegend media={item} />,
         width: item.width,

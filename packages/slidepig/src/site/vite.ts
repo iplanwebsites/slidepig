@@ -43,6 +43,9 @@ export function slidepigSite(options: SlidepigSiteOptions = {}): Plugin {
         // SITE_ORIGIN and friends are readable as import.meta.env.SITE_*.
         envPrefix: ["VITE_", "SITE_"],
         ssr: { noExternal: ["slidepig"] },
+        // One React for slidepig and the deck's own components, even when
+        // slidepig is linked from another checkout with its own node_modules.
+        resolve: { dedupe: ["react", "react-dom"] },
         environments: {
           client: {
             build: {
