@@ -7,11 +7,12 @@
     "dev": "pnpm --filter slidepig build && pnpm --filter slidepig-demo dev",
     "build": "pnpm -r --workspace-concurrency=1 build",
     "test": "pnpm -r test",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm build:lib && pnpm -r typecheck",
     "assets": "pnpm --filter slidepig-demo assets",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm format:check && pnpm typecheck && pnpm test && pnpm build && pnpm --filter slidepig size && pnpm --filter slidepig smoke"
+    "check": "pnpm format:check && pnpm typecheck && pnpm test && pnpm build && pnpm --filter slidepig size && pnpm --filter slidepig smoke",
+    "build:lib": "pnpm --filter slidepig build"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
