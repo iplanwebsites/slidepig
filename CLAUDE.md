@@ -28,6 +28,12 @@ pnpm check   # run before every push (there is no CI): format, typecheck, tests,
 - `apps/starter` is the `slidepig create` template: keep it minimal and
   consuming `dist/` (no `slidepig-source` condition).
 
+## Deploy
+
+The demo deploys to https://slidepig.felixmenard.com with
+`sh _internal/deploy.sh` (private, gitignored; `--dry-run` to check). Run
+`pnpm check` first.
+
 ## New presentation
 
 - In a site: `pnpm --filter <app> new <slug>` (runs `slidepig new`), edit `src/decks/<slug>.ts`.
