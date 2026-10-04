@@ -145,7 +145,7 @@ slidepig assets --force    # re-encode everything
 slidepig assets --cwd apps/demo
 ```
 
-`--check` is the CI guard: it fails when a source was added or edited without
+`--check` is the guard for a pre-push or CI step: it fails when a source was added or edited without
 running the pipeline, and never touches the working tree.
 
 ## When it re-encodes

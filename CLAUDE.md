@@ -7,7 +7,7 @@ slidepig: decks that are web pages. pnpm workspace; see README.md for the map.
 ```bash
 pnpm install
 pnpm dev     # builds packages, then apps/demo with SSR on :4900
-pnpm check   # everything CI runs: format, typecheck, tests, build + validation, size, scaffold
+pnpm check   # run before every push (there is no CI): format, typecheck, tests, build + validation, size, scaffold
 ```
 
 ## Rules

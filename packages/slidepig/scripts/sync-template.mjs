@@ -1,5 +1,5 @@
 // Copies apps/starter into template/, turning workspace dependencies into
-// the versions being published. apps/starter is built and validated in CI,
+// the versions being published. apps/starter is built and validated by `pnpm check`,
 // so the template is always a project known to work.
 import { cp, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";

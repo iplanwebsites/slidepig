@@ -24,7 +24,7 @@ export type AssetRunOptions = {
   cwd?: string;
   /** Re-encode every source, ignoring the cache. */
   force?: boolean;
-  /** Report what is out of date and write nothing. Used by CI. */
+  /** Report what is out of date and write nothing. Used as a pre-push guard. */
   check?: boolean;
   logger?: Pick<Console, "log" | "warn" | "error">;
 };

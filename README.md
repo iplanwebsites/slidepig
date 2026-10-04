@@ -54,8 +54,8 @@ export default defineDeck({
 ## What's in the trough
 
 - 🐷 **Lean as a racing pig.** No runtime dependencies, React as a peer, no
-  UI kit. A `<Deck>` costs about 15 KB gzipped plus 8 KB of CSS, and CI
-  squeals if that grows.
+  UI kit. A `<Deck>` costs about 15 KB gzipped plus 8 KB of CSS, and
+  `pnpm check` squeals if that grows.
 - ⌨️ **Built for the person on stage.** <kbd>↑</kbd> <kbd>↓</kbd> change
   slides, <kbd>←</kbd> <kbd>→</kbd> drive the carousel, <kbd>Space</kbd> plays
   the video, <kbd>Esc</kbd> heads back to reading. The next slide's images are
@@ -79,13 +79,13 @@ decks, once the second one showed what was mechanics and what was content.
 One npm package, [`slidepig`](packages/slidepig), and the apps that keep it
 honest.
 
-| Path                                     | Who lives here                                             |
-| ---------------------------------------- | ---------------------------------------------------------- |
-| [`packages/slidepig`](packages/slidepig) | the pig itself: library, site tooling, image pipeline, CLI |
-| [`apps/starter`](apps/starter)           | the piglet `slidepig create` hands you, built in CI        |
-| [`apps/demo`](apps/demo)                 | the show pig: a tour of slidepig, made with slidepig       |
-| [`apps/host-page`](apps/host-page)       | a deck piggybacking on an ordinary website                 |
-| [`apps/root-render`](apps/root-render)   | the runt: one `mountDeck` call, and that's it              |
+| Path                                     | Who lives here                                                |
+| ---------------------------------------- | ------------------------------------------------------------- |
+| [`packages/slidepig`](packages/slidepig) | the pig itself: library, site tooling, image pipeline, CLI    |
+| [`apps/starter`](apps/starter)           | the piglet `slidepig create` hands you, built by `pnpm check` |
+| [`apps/demo`](apps/demo)                 | the show pig: a tour of slidepig, made with slidepig          |
+| [`apps/host-page`](apps/host-page)       | a deck piggybacking on an ordinary website                    |
+| [`apps/root-render`](apps/root-render)   | the runt: one `mountDeck` call, and that's it                 |
 
 Inside the package, parts are imported by path: `slidepig` (the deck),
 `slidepig/react` (headless), `slidepig/site` (a site of decks),
@@ -98,7 +98,7 @@ optional peers that only the build steps load.
 ```sh
 pnpm install
 pnpm dev          # builds the package, then the demo with SSR on :4900
-pnpm check        # everything CI runs: format, types, tests, builds, size, scaffold
+pnpm check        # run before every push: format, types, tests, builds, size, scaffold
 pnpm build        # every app, prerendered and validated
 pnpm --filter slidepig-demo preview   # the built demo through the real Worker, :4901
 ```

@@ -20,7 +20,7 @@ page that **reads like a document** and **presents like a slideshow**.
   which one is visible.
 - **Light enough to embed.** No runtime dependencies, React 19 as a peer, and
   no UI library: about 15 KB gzipped for `<Deck>` plus 8 KB of CSS. The
-  budget is enforced in CI.
+  budget is enforced by the repo's checks.
 
 ## Quick start
 
