@@ -122,8 +122,9 @@
     "size": "node scripts/check-size.mjs",
     "template": "node scripts/sync-template.mjs",
     "smoke": "node scripts/sync-template.mjs && node scripts/smoke-test.mjs",
-    "prepack": "node scripts/sync-template.mjs",
-    "prepublishOnly": "pnpm run build && pnpm run size"
+    "prepack": "node scripts/sync-template.mjs && node scripts/publish-manifest.mjs",
+    "prepublishOnly": "pnpm run build && pnpm run size",
+    "postpack": "node scripts/publish-manifest.mjs restore"
   },
   "peerDependencies": {
     "react": "^19.0.0",

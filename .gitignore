@@ -10,3 +10,4 @@ packages/slidepig/template/
 
 # Private deployment configuration, kept out of the public repository.
 _internal/
+package.json.workspace
