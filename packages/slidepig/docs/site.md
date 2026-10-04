@@ -84,12 +84,18 @@ export default defineSite({
 
 ## The Worker
 
-Serves `dist/` through the static assets binding. The binding already answers
-conditional requests with ETags and 304s; the Worker sets the policy around
-them: content-hashed files under `/assets/` and `/_media/` are immutable for
-a year, and HTML is `max-age=0, must-revalidate`, so a deploy shows up at
-once while unchanged pages cost a 304. `createSiteWorker({ headers })` adds
-headers of your own.
+Serves `dist/` through the static assets binding and sets the cache policy:
+content-hashed files under `/assets/` and `/_media/` are immutable for a
+year, and HTML is `max-age=0, must-revalidate`, so a deploy shows up at once
+while unchanged pages cost a 304.
+
+Every page gets two validators. A weak ETag is hashed from the page, since
+production asset bindings send HTML without one. With the
+`version_metadata` binding, a `Last-Modified` comes from the deploy time.
+Cloudflare drops ETags from HTML when zone features (such as Email
+Obfuscation) rewrite pages, but it keeps `Last-Modified`, so revalidation
+keeps working either way. `createSiteWorker({ headers })` adds headers of
+your own.
 
 ```jsonc
 // wrangler.jsonc
@@ -97,6 +103,7 @@ headers of your own.
   "name": "my-presentations",
   "main": "worker/index.ts",
   "compatibility_date": "2025-09-01",
+  "version_metadata": { "binding": "CF_VERSION_METADATA" },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
