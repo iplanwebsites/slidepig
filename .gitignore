@@ -11,3 +11,4 @@ packages/slidepig/template/
 # Private deployment configuration, kept out of the public repository.
 _internal/
 package.json.workspace
+packages/slidepig/THIRD_PARTY_NOTICES.md

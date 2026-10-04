@@ -23,7 +23,8 @@
     "template",
     "docs",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "exports": {
     ".": {
@@ -122,7 +123,7 @@
     "size": "node scripts/check-size.mjs",
     "template": "node scripts/sync-template.mjs",
     "smoke": "node scripts/sync-template.mjs && node scripts/smoke-test.mjs",
-    "prepack": "node scripts/sync-template.mjs && node scripts/publish-manifest.mjs",
+    "prepack": "node scripts/sync-template.mjs && node scripts/third-party-notices.mjs && node scripts/publish-manifest.mjs",
     "prepublishOnly": "pnpm run build && pnpm run size",
     "postpack": "node scripts/publish-manifest.mjs restore"
   },
