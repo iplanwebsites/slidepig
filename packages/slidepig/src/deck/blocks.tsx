@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { MediaCarousel } from "../media/media-carousel";
 import type { MediaCarouselItem } from "../media/media-carousel";
 import { MediaExpandIcon, MediaLightbox } from "../media/media-lightbox";
@@ -7,6 +7,7 @@ import type { MediaLightboxVideoState } from "../media/media-lightbox";
 import { useDeckRuntime } from "./context";
 import type { DeckRuntime } from "./context";
 import { DeckImage } from "./image";
+import type { builtInLayoutNames } from "./layout-names";
 import {
   ArrowUpRightIcon,
   GlobeIcon,
@@ -17,11 +18,15 @@ import {
 import type {
   DeckAction,
   DeckCode,
+  DeckContent,
   DeckDetail,
   DeckItem,
   DeckLink,
   DeckMedia,
   DeckMediaDisplay,
+  DeckLayoutComponent,
+  DeckLayoutParts,
+  DeckLayoutProps,
   DeckSlide,
 } from "./types";
 
@@ -48,13 +53,40 @@ function MediaLegend({ media }: { media: DeckMedia }) {
   );
 }
 
-/** Slide copy is plain text; `backticks` become inline code. */
-export function RichText({ text }: { text: string }) {
+/**
+ * Inline copy: in a string, `backticks` become inline code; any other content
+ * renders as given.
+ */
+export function RichText({ text }: { text: DeckContent }) {
+  if (typeof text !== "string") return text;
   const parts = text.split(/`([^`]+)`/);
   if (parts.length === 1) return text;
   return parts.map((part, index) =>
     index % 2 ? <code key={index}>{part}</code> : part,
   );
+}
+
+/**
+ * Block copy: a string becomes a paragraph; other content (a list, a
+ * component) is rendered as given, in a `div` when a class is wanted, since
+ * it may not belong inside a `<p>`.
+ */
+export function Prose({
+  content,
+  className,
+}: {
+  content: DeckContent;
+  className?: string;
+}) {
+  if (content === undefined || content === null || content === false)
+    return null;
+  if (typeof content === "string" || typeof content === "number")
+    return (
+      <p className={className}>
+        <RichText text={String(content)} />
+      </p>
+    );
+  return className ? <div className={className}>{content}</div> : content;
 }
 
 function isExternal(href: string): boolean {
@@ -386,15 +418,15 @@ export function ItemGroup({
   return (
     <ol className={`sp-items sp-items-${variant}`}>
       {items.map((item, index) => (
-        <li key={item.title}>
+        <li key={index}>
           <span className="sp-item-label">
             {item.label ?? String(index + 1).padStart(2, "0")}
           </span>
           <div>
-            <h3>{item.title}</h3>
-            <p>
-              <RichText text={item.text} />
-            </p>
+            <h3>
+              <RichText text={item.title} />
+            </h3>
+            <Prose content={item.text} />
           </div>
         </li>
       ))}
@@ -406,10 +438,13 @@ export function MoreContext({
   detail,
   active,
   presenting,
+  label = "",
 }: {
   detail: DeckDetail;
   active: boolean;
   presenting: boolean;
+  /** Names the detail's gallery when its title is not plain text. */
+  label?: string;
 }) {
   const [expanded, setExpanded] = useState(false);
   return (
@@ -418,20 +453,18 @@ export function MoreContext({
       onToggle={(event) => setExpanded(event.currentTarget.open)}
     >
       <summary>
-        {detail.title}
+        <RichText text={detail.title} />
         <PlusIcon size={18} />
       </summary>
       <div>
-        <p>
-          <RichText text={detail.text} />
-        </p>
+        <Prose content={detail.text} />
         <ResourceLinks links={detail.links} />
         {detail.media && expanded && (
           <div className="sp-media-gallery">
             <SlideMedia
               media={detail.media}
               mediaDisplay={detail.mediaDisplay}
-              title={detail.title}
+              title={typeof detail.title === "string" ? detail.title : label}
               active={active && expanded}
               presenting={presenting}
             />
@@ -451,12 +484,13 @@ function SlideDetails({
   active: boolean;
   presenting: boolean;
 }) {
-  return slide.details?.map((detail) => (
+  return slide.details?.map((detail, index) => (
     <MoreContext
-      key={detail.title}
+      key={index}
       detail={detail}
       active={active}
       presenting={presenting}
+      label={slide.title}
     />
   ));
 }
@@ -547,12 +581,12 @@ export function CodeListing({ code }: { code: DeckCode }) {
   );
 }
 
-function Stats({ slide }: { slide: DeckSlide }) {
+export function Stats({ slide }: { slide: DeckSlide }) {
   const { labels } = useDeckRuntime();
   if (!slide.stats?.length) return null;
   return (
     <div className="sp-impact-stats" role="group" aria-label={labels.stats}>
-      {slide.stats.map((stat) => {
+      {slide.stats.map((stat, index) => {
         const content = (
           <>
             <strong>{stat.value}</strong>
@@ -565,12 +599,12 @@ function Stats({ slide }: { slide: DeckSlide }) {
             href={stat.href}
             target="_blank"
             rel="noopener noreferrer"
-            key={stat.value}
+            key={index}
           >
             {content}
           </a>
         ) : (
-          <div className="sp-impact-stat" key={stat.value}>
+          <div className="sp-impact-stat" key={index}>
             {content}
           </div>
         );
@@ -579,31 +613,29 @@ function Stats({ slide }: { slide: DeckSlide }) {
   );
 }
 
-/** The default body of a slide, chosen by its `layout`. */
-export function SlideContent({
-  slide,
-  index = 0,
-  active,
-  presenting = false,
-}: {
-  slide: DeckSlide;
-  index?: number;
-  active: boolean;
-  presenting?: boolean;
-}) {
-  const { icons } = useDeckRuntime();
-  const layout = slide.layout ?? "story";
-  const hasVisual = !!(
-    slide.visual ||
-    slide.code ||
-    slide.actions?.length ||
-    slide.media?.length
-  );
+/**
+ * A slide's content as separate parts, for built-in and custom layouts alike.
+ */
+export function useSlideParts(
+  slide: DeckSlide,
+  {
+    index,
+    active,
+    presenting,
+  }: { index: number; active: boolean; presenting: boolean },
+): DeckLayoutParts {
   const visual =
     typeof slide.visual === "function"
       ? slide.visual({ index, active, presenting })
       : slide.visual;
-  const media = (
+  const hasMedia = !!(
+    slide.visual ||
+    slide.code ||
+    slide.actions?.length ||
+    slide.media?.length ||
+    (slide.linksPlacement === "after-media" && slide.links?.length)
+  );
+  const media = hasMedia ? (
     <>
       {visual}
       {slide.code && <CodeListing code={slide.code} />}
@@ -617,27 +649,30 @@ export function SlideContent({
       {!!slide.actions?.length && (
         <ActionCards actions={slide.actions} active={active} />
       )}
+      {slide.linksPlacement === "after-media" && (
+        <ResourceLinks links={slide.links} />
+      )}
     </>
-  );
+  ) : null;
   const copy = (
     <div className="sp-copy">
-      {slide.eyebrow && <p className="sp-eyebrow">{slide.eyebrow}</p>}
+      <Prose content={slide.eyebrow} className="sp-eyebrow" />
       <h2 id={`${slide.id}-title`}>{slide.title}</h2>
       {!!slide.body?.length && (
         <div className="sp-body">
-          {slide.body.map((paragraph) => (
-            <p key={paragraph}>
-              <RichText text={paragraph} />
-            </p>
+          {slide.body.map((paragraph, key) => (
+            <Prose key={key} content={paragraph} />
           ))}
         </div>
       )}
       {!!slide.examples?.length && (
         <div className="sp-case-examples">
-          {slide.examples.map((example) => (
-            <div className="sp-case-example" key={example.title}>
-              <h3>{example.title}</h3>
-              <p>{example.text}</p>
+          {slide.examples.map((example, key) => (
+            <div className="sp-case-example" key={key}>
+              <h3>
+                <RichText text={example.title} />
+              </h3>
+              <Prose content={example.text} />
               {!!example.actions?.length && (
                 <ActionCards actions={example.actions} active={active} />
               )}
@@ -650,138 +685,210 @@ export function SlideContent({
       />
     </div>
   );
-  const details = (
-    <SlideDetails slide={slide} active={active} presenting={presenting} />
-  );
+  return {
+    copy,
+    media,
+    hasMedia,
+    items: <ItemGroup items={slide.items} />,
+    stats: <Stats slide={slide} />,
+    details: (
+      <SlideDetails slide={slide} active={active} presenting={presenting} />
+    ),
+  };
+}
 
-  switch (layout) {
-    case "metric":
-      return (
-        <>
-          <div className="sp-split sp-impact-layout">
-            {copy}
-            <div className="sp-impact">
-              {visual}
-              <Stats slide={slide} />
-              {slide.details?.[0] && (
-                <aside className="sp-impact-fact">
-                  <strong>{slide.details[0].title}</strong>
-                  <p>{slide.details[0].text}</p>
-                </aside>
-              )}
-            </div>
-          </div>
-        </>
-      );
-    case "case":
-      return (
-        <>
-          <div className="sp-split sp-team-layout">
-            {copy}
-            <div className="sp-capabilities-column">
-              {slide.itemsTitle && (
-                <p className="sp-capabilities-title">{slide.itemsTitle}</p>
-              )}
-              <dl className="sp-capabilities">
-                {slide.items?.map((item) => (
-                  <div key={item.title}>
-                    <dt>{item.title}</dt>
-                    <dd>
-                      <RichText text={item.text} />
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </div>
-          {details}
-        </>
-      );
-    case "groups":
-      return (
-        <>
-          {copy}
-          <div className="sp-opportunity-groups" role="group">
-            {slide.itemGroups?.map((group) => (
-              <div className="sp-opportunity-group" key={group.title}>
-                <h3>{group.title}</h3>
-                <ul>
-                  {group.items.map((item) => (
-                    <li key={item.title}>
-                      {item.icon && icons[item.icon] && (
-                        <span
-                          className="sp-opportunity-icon"
-                          aria-hidden="true"
-                        >
-                          {icons[item.icon]}
-                        </span>
-                      )}
-                      <div>
-                        <h4>{item.title}</h4>
+function MediaStack({ children }: { children: ReactNode }) {
+  return <div className="sp-media-stack">{children}</div>;
+}
+
+function Story({ parts }: DeckLayoutProps) {
+  return (
+    <>
+      <div className={`sp-split${parts.hasMedia ? "" : " sp-split-copy-only"}`}>
+        {parts.copy}
+        {parts.hasMedia && <MediaStack>{parts.media}</MediaStack>}
+      </div>
+      {parts.details}
+    </>
+  );
+}
+
+function Metric({ slide, parts }: DeckLayoutProps) {
+  const fact = slide.details?.[0];
+  return (
+    <div className="sp-split sp-impact-layout">
+      {parts.copy}
+      <div className="sp-impact">
+        {parts.media}
+        {parts.stats}
+        {fact && (
+          <aside className="sp-impact-fact">
+            <strong>
+              <RichText text={fact.title} />
+            </strong>
+            <Prose content={fact.text} />
+          </aside>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Case({ slide, parts }: DeckLayoutProps) {
+  return (
+    <>
+      <div className="sp-split sp-team-layout">
+        {parts.copy}
+        <div className="sp-capabilities-column">
+          {parts.hasMedia && <MediaStack>{parts.media}</MediaStack>}
+          {slide.itemsTitle !== undefined && (
+            <Prose
+              content={slide.itemsTitle}
+              className="sp-capabilities-title"
+            />
+          )}
+          {!!slide.items?.length && (
+            <dl className="sp-capabilities">
+              {slide.items.map((item, key) => (
+                <div key={key}>
+                  <dt>
+                    <RichText text={item.title} />
+                  </dt>
+                  <dd>
+                    <RichText text={item.text} />
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </div>
+      </div>
+      {parts.details}
+    </>
+  );
+}
+
+function Groups({ slide, parts }: DeckLayoutProps) {
+  const { icons } = useDeckRuntime();
+  return (
+    <>
+      {parts.copy}
+      <div className="sp-opportunity-groups" role="group">
+        {slide.itemGroups?.map((group, groupKey) => (
+          <div className="sp-opportunity-group" key={groupKey}>
+            <h3>
+              <RichText text={group.title} />
+            </h3>
+            <ul>
+              {group.items.map((item, key) => {
+                const link = item.link && (
+                  <>
+                    {" "}
+                    <a href={item.link.href} target="_blank" rel="noreferrer">
+                      {item.link.label}
+                    </a>
+                  </>
+                );
+                return (
+                  <li key={key}>
+                    {item.icon && icons[item.icon] && (
+                      <span className="sp-opportunity-icon" aria-hidden="true">
+                        {icons[item.icon]}
+                      </span>
+                    )}
+                    <div>
+                      <h4>
+                        <RichText text={item.title} />
+                      </h4>
+                      {typeof item.text === "string" ? (
                         <p>
                           <RichText text={item.text} />
-                          {item.link && (
-                            <>
-                              {" "}
-                              <a
-                                href={item.link.href}
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                {item.link.label}
-                              </a>
-                            </>
-                          )}
+                          {link}
                         </p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+                      ) : (
+                        <div>
+                          {item.text}
+                          {link}
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-          {details}
-        </>
-      );
-    case "rows":
-    case "timeline":
-      return (
-        <>
-          {copy}
-          <ItemGroup
-            items={slide.items}
-            variant={layout === "timeline" ? "timeline" : "rows"}
-          />
-          {media}
-          {details}
-        </>
-      );
-    case "statement":
-    case "closing":
-      return (
-        <>
-          {copy}
-          <ItemGroup items={slide.items} />
-          {media}
-          {details}
-        </>
-      );
-    default:
-      return (
-        <>
-          <div className={`sp-split${hasVisual ? "" : " sp-split-copy-only"}`}>
-            {copy}
-            {hasVisual && (
-              <div className="sp-media-stack">
-                {media}
-                {slide.linksPlacement === "after-media" && (
-                  <ResourceLinks links={slide.links} />
-                )}
-              </div>
-            )}
-          </div>
-          {details}
-        </>
-      );
-  }
+        ))}
+      </div>
+      {parts.hasMedia && <MediaStack>{parts.media}</MediaStack>}
+      {parts.details}
+    </>
+  );
+}
+
+function Rows({ slide, parts }: DeckLayoutProps) {
+  return (
+    <>
+      {parts.copy}
+      <ItemGroup
+        items={slide.items}
+        variant={slide.layout === "timeline" ? "timeline" : "rows"}
+      />
+      {parts.media}
+      {parts.details}
+    </>
+  );
+}
+
+function Statement({ parts }: DeckLayoutProps) {
+  return (
+    <>
+      {parts.copy}
+      {parts.items}
+      {parts.media}
+      {parts.details}
+    </>
+  );
+}
+
+/**
+ * The built-in layouts, as components over a slide's parts. Wrap one to make
+ * a variant: `layouts: { quiet: (props) => <builtInLayouts.story {...props} /> }`.
+ */
+export const builtInLayouts = {
+  hero: Story,
+  story: Story,
+  rows: Rows,
+  timeline: Rows,
+  case: Case,
+  metric: Metric,
+  statement: Statement,
+  groups: Groups,
+  closing: Statement,
+} satisfies Record<(typeof builtInLayoutNames)[number], DeckLayoutComponent>;
+
+/**
+ * The body of a slide: its `render` function, else its layout, looked up in
+ * the deck's custom layouts first, then the built-in ones.
+ */
+export function SlideContent({
+  slide,
+  index = 0,
+  active,
+  presenting = false,
+}: {
+  slide: DeckSlide;
+  index?: number;
+  active: boolean;
+  presenting?: boolean;
+}) {
+  const { layouts } = useDeckRuntime();
+  const parts = useSlideParts(slide, { index, active, presenting });
+  const props: DeckLayoutProps = { slide, parts, index, active, presenting };
+  if (slide.render) return slide.render(props);
+  const name = slide.layout ?? "story";
+  const Layout: DeckLayoutComponent =
+    layouts[name] ??
+    builtInLayouts[name as keyof typeof builtInLayouts] ??
+    builtInLayouts.story;
+  return <Layout {...props} />;
 }

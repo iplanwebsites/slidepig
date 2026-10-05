@@ -14,7 +14,10 @@ export default defineSite({
   // Set SITE_ORIGIN when building to emit canonical and og:url tags.
   origin: import.meta.env.SITE_ORIGIN,
   // Every file in decks/ is a deck, served at /<file name>/.
-  decks: import.meta.glob("./decks/*.ts", { eager: true, import: "default" }),
+  decks: import.meta.glob("./decks/*.{ts,tsx}", {
+    eager: true,
+    import: "default",
+  }),
   media,
   // The tuner ships here so visitors can try it; D opens it.
   deckProps: { tuner: true, tunerInitiallyVisible: false },

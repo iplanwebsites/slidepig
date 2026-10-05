@@ -1,0 +1,59 @@
+/* Styles for the "mix" deck only. */
+[data-deck="mix"] {
+  .mix-compare table {
+    width: 100%;
+    margin-top: 32px;
+    border-collapse: collapse;
+    font-size: 18px;
+  }
+  .mix-compare th,
+  .mix-compare td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--sp-line, rgb(0 0 0 / 15%));
+    text-align: left;
+  }
+  .mix-compare th {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .mix-meter {
+    display: grid;
+    gap: 8px;
+    padding: 32px;
+    border: 1px solid currentColor;
+    border-radius: 12px;
+    transition: background 300ms ease;
+  }
+  .mix-meter[data-active="true"] {
+    background: color-mix(in oklab, var(--sp-accent) 18%, transparent);
+  }
+  .mix-meter span {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .mix-meter strong {
+    font-size: 28px;
+  }
+
+  .mix-spotlight {
+    background:
+      radial-gradient(circle at 70% 40%, var(--mix-glow), transparent 45%),
+      #15110f;
+  }
+
+  .mix-one-off {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .mix-big-number {
+    font-size: clamp(96px, 16vw, 220px);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--sp-accent);
+  }
+}

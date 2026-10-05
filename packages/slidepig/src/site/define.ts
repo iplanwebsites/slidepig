@@ -11,7 +11,7 @@ export type SiteConfig = {
   origin?: string;
   /**
    * The decks, keyed by slug or by file path. Pass
-   * `import.meta.glob("./decks/*.ts", { eager: true, import: "default" })`
+   * `import.meta.glob("./decks/*.{ts,tsx}", { eager: true, import: "default" })`
    * and every file in `decks/` becomes `/<file name>/`.
    */
   decks: Record<string, unknown>;

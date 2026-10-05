@@ -1,10 +1,10 @@
 # slidepig demo site
 
-The show pig: a home page and two decks, prerendered at build time and served
+The show pig: a home page and three decks, prerendered at build time and served
 by a Cloudflare Worker. Live at <https://slidepig.felixmenard.com>.
 
 ```
-src/decks/*.ts     the decks: pure data, `import { defineDeck } from "slidepig"` only
+src/decks/*.ts(x)  the decks: data, plus components, layouts and CSS where wanted (mix.tsx)
 src/site.ts        defineSite: title, home page, which decks, image manifest
 vite.config.ts     slidepigSite() (plus the monorepo-only source conditions)
 worker/index.ts    export { default } from "slidepig/site/worker"

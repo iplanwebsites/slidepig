@@ -21,8 +21,10 @@ pnpm check   # run before every push (there is no CI): format, typecheck, tests,
   entries (`slidepig/site/vite`, `slidepig/site/build`, `slidepig/assets`,
   the CLI). Browser entries must never import them.
 - `_internal/` is private deployment config and is gitignored: never commit it.
-- Deck files are data: `import { defineDeck } from "slidepig"` and nothing
-  else. A new layout or visual belongs in the library, not in a deck.
+- Decks are flexible by design: a deck file (`.ts` or `.tsx`) may bring its
+  own components, layouts (`deck.layouts`), rich copy and CSS. Keep the
+  library generic: only a layout or block that most decks would want belongs
+  in `packages/slidepig`.
 - CSS classes are prefixed `sp-` (`sp-ui-` for controls); tokens live on
   `.sp-deck`. Nothing may style the host page.
 - `apps/starter` is the `slidepig create` template: keep it minimal and

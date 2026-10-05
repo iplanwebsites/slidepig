@@ -149,24 +149,25 @@ validated page per deck, served by a Cloudflare Worker. Start one with
 
 A slide is an object. Only `id` and `title` are required.
 
-| Field                               | Purpose                                                                         |
-| ----------------------------------- | ------------------------------------------------------------------------------- |
-| `id`                                | URL hash, and the key the tuner reports                                         |
-| `nav`                               | short label for menus (defaults to `title`)                                     |
-| `eyebrow`, `title`, `body`          | the copy                                                                        |
-| `layout`                            | `hero` `story` `rows` `timeline` `metric` `case` `groups` `statement` `closing` |
-| `tone`                              | `light` `dark` `paper`                                                          |
-| `background`                        | a name from `deck.backgrounds`, or `{ src, position, overlay }`                 |
-| `theme`, `overlay`, `accentColor`   | palette, most specific wins                                                     |
-| `media`, `mediaDisplay`             | ids from `deck.media`; `{ mode: "carousel" }` to group them                     |
-| `actions`, `links`                  | buttons that open a video, or links out                                         |
-| `items`, `itemsTitle`, `itemGroups` | lists for `rows`, `timeline`, `case`, `groups`                                  |
-| `stats`                             | big numbers for `metric`                                                        |
-| `details`                           | expandable "more context" under the slide                                       |
-| `code`                              | a code listing in the media column: `{ filename, source }`                      |
-| `visual`                            | a component in the media column, or `({ active, presenting }) => …`             |
-| `render`                            | replace the slide body entirely: `({ index, active, presenting }) => …`         |
-| `backgroundOptions`                 | backgrounds the tuner offers for this slide                                     |
+| Field                               | Purpose                                                               |
+| ----------------------------------- | --------------------------------------------------------------------- |
+| `id`                                | URL hash, and the key the tuner reports                               |
+| `nav`                               | short label for menus (defaults to `title`)                           |
+| `eyebrow`, `title`, `body`          | the copy: strings, or any React content (`title` stays plain text)    |
+| `layout`                            | a built-in layout (below), or one from `deck.layouts`                 |
+| `tone`                              | `light` `dark` `paper`                                                |
+| `background`                        | a name from `deck.backgrounds`, or `{ src, position, overlay }`       |
+| `theme`, `overlay`, `accentColor`   | palette, most specific wins                                           |
+| `media`, `mediaDisplay`             | ids from `deck.media`; `{ mode: "carousel" }` to group them           |
+| `actions`, `links`                  | buttons that open a video, or links out                               |
+| `items`, `itemsTitle`, `itemGroups` | lists for `rows`, `timeline`, `case`, `groups`                        |
+| `stats`                             | big numbers for `metric`                                              |
+| `details`                           | expandable "more context" under the slide                             |
+| `code`                              | a code listing in the media column: `{ filename, source }`            |
+| `visual`                            | a component in the media column, or `({ active, presenting }) => …`   |
+| `render`                            | a one-off layout: `({ slide, parts, active, presenting }) => …`       |
+| `className`, `style`                | classes and inline styles or CSS variables on the slide's `<section>` |
+| `backgroundOptions`                 | backgrounds the tuner offers for this slide                           |
 
 Media without a `src` renders a labelled placeholder, so a draft deck looks
 unfinished rather than broken.
@@ -177,34 +178,86 @@ Items can name a built-in icon (`link`, `phone`, `accessibility`, `keyboard`,
 `description` and `accentColor` feed the page head, `DeckIndex` and the
 controls, and `image` becomes the link-preview image (`og:image`).
 
-### Decks with their own components
+Built-in layouts: `hero` `story` `rows` `timeline` `metric` `case` `groups`
+`statement` `closing`. Every one of them shows `visual`, `code`, `media` and
+`actions` when a slide has them.
 
-A deck can be a `.tsx` module that brings its own components and their
-dependencies. slidepig only places them:
+### Mix and match
+
+Every slide can bring its own components, layout and CSS. slidepig handles
+navigation, presenting and the chrome, and places what you give it.
 
 ```tsx
 import { defineDeck } from "slidepig";
+import type { DeckLayoutProps } from "slidepig";
 import { Bot } from "lucide-react";
 import { Globe } from "./globe"; // ships its own dependencies
-import "./my-deck.css"; // scope it with [data-deck="my-deck"] or slide ids
+import "./my-deck.css"; // scope it with [data-deck="my-deck"]
+
+// A layout any slide can name. `parts` is the slide's content, rendered the
+// way the built-in layouts use it: copy, media, items, stats, details.
+function Pricing({ slide, parts }: DeckLayoutProps) {
+  return (
+    <div className="pricing">
+      {parts.copy}
+      <PriceTable plans={slide.items} />
+      {parts.details}
+    </div>
+  );
+}
 
 export default defineDeck({
   title: "Our pitch",
-  image: "/og.png",
-  icons: { bot: <Bot size={18} /> }, // names items can use, deck-local
+  image: "/og.png", // link previews
+  icons: { bot: <Bot size={18} /> }, // names items can use
+  layouts: { pricing: Pricing }, // a typo in a slide's layout is a type error
   slides: [
+    {
+      id: "intro",
+      title: "Hello",
+      // Strings are paragraphs; anything else renders as given.
+      body: [
+        "Plain text, with `code`.",
+        <p key="more">
+          Or <a href="/deck.pdf">links</a> and <em>components</em>.
+        </p>,
+      ],
+    },
     { id: "reach", title: "Global reach", layout: "metric", visual: <Globe /> },
     {
       id: "demo",
       title: "Try it",
-      // Receives live state, e.g. to pause while another slide is on stage.
+      // A function gets live state, e.g. to pause while off-stage.
       visual: ({ active, presenting }) => (
         <Demo running={active || !presenting} />
       ),
     },
+    { id: "plans", title: "Plans", layout: "pricing", items: [/* … */] },
+    {
+      id: "spotlight",
+      title: "One more thing",
+      className: "spotlight", // per-slide CSS
+      style: { "--glow": "#ff8a3d" },
+    },
+    {
+      id: "custom",
+      title: "Anything",
+      // A one-off layout, with the same parts.
+      render: ({ parts }) => <Poster>{parts.copy}</Poster>,
+    },
   ],
 });
 ```
+
+- **A layout per deck or per site.** `deck.layouts` are the deck's own;
+  `<Deck layouts>` (or `deckProps.layouts` in `slidepig/site`) adds layouts
+  shared by several decks, and wins. A name that matches a built-in layout
+  replaces it.
+- **Reuse the built-ins.** `builtInLayouts.story` and friends are ordinary
+  components: wrap one to make a variant. `Prose`, `RichText`, `SlideMedia`,
+  `ItemGroup`, `Stats` and `ActionCards` are exported for layouts of your own.
+- **Keep it valid.** `validateDeck` reports layouts that do not exist.
+  `apps/demo/src/decks/mix.tsx` shows all of this in one deck.
 
 ## `<Deck>` props
 
@@ -214,6 +267,7 @@ export default defineDeck({
 | `resolver`              | URLs as written | optimized images: `createMediaResolver(manifest)`       |
 | `labels`                | English         | `frenchLabels`, or any partial override                 |
 | `icons`                 | `slideIcons`    | add or replace glyphs that slide items name with `icon` |
+| `layouts`               | built-in        | layouts slides can name, over the deck's own            |
 | `controlIcons`          | built-in SVGs   | replace the control bar icons                           |
 | `sidebar`               | `false`         | a fixed slide list beside the reading view              |
 | `tuner`                 | `"localhost"`   | `true` to ship it, `false` to remove it                 |

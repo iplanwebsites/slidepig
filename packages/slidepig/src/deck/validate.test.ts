@@ -56,7 +56,7 @@ describe("validateDeck", () => {
     );
   });
 
-  it("warns about layouts without their content and repeated keys", () => {
+  it("warns about layouts without their content", () => {
     const found = messages({
       title: "Warnings",
       media: { later: { kind: "video", title: "Later" } },
@@ -68,9 +68,28 @@ describe("validateDeck", () => {
     expect(found).toContain(
       "warning: a metric slide shows `stats`, but this one has none",
     );
-    expect(found).toContain('warning: paragraph "Same" appears twice');
+    // Keys are positional, so repeated copy is fine.
+    expect(found.join("\n")).not.toContain("appears twice");
     expect(found).toContain(
       'warning: media "later" has no src yet and will render as a placeholder',
     );
+  });
+
+  it("knows built-in, deck and externally supplied layouts", () => {
+    const deck = {
+      title: "Layouts",
+      layouts: { pricing: () => null },
+      slides: [
+        { id: "a", title: "A", layout: "pricing" },
+        { id: "b", title: "B", layout: "team" },
+        { id: "c", title: "C", layout: "metric", render: () => null },
+      ],
+    } as Deck;
+    const errors = (options?: { layouts?: string[] }) =>
+      validateDeck(deck, options).map((issue) => issue.message);
+    expect(errors()).toContain(
+      'layout "team" is neither built in nor in deck.layouts',
+    );
+    expect(errors({ layouts: ["team"] })).toEqual([]);
   });
 });

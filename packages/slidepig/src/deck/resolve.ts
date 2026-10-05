@@ -12,16 +12,17 @@ import { backgroundPreloadSource } from "./image";
 
 /**
  * Declare a deck. An identity function that exists for inference: media ids,
- * theme names and background names become string-literal unions, so a typo in
+ * theme, background and layout names become string-literal unions, so a typo in
  * a slide is a type error rather than a blank square on stage.
  */
 export function defineDeck<
   const MediaId extends string = never,
   const ThemeName extends string = never,
   const BackgroundName extends string = never,
+  const LayoutName extends string = never,
 >(
-  deck: Deck<MediaId, ThemeName, BackgroundName>,
-): Deck<MediaId, ThemeName, BackgroundName> {
+  deck: Deck<MediaId, ThemeName, BackgroundName, LayoutName>,
+): Deck<MediaId, ThemeName, BackgroundName, LayoutName> {
   return deck;
 }
 

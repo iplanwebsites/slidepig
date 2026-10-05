@@ -21,7 +21,10 @@ export default defineSite({
   title: "Presentations",
   description: "Decks that read like documents and present like slides.",
   // Every file in decks/ is a deck, served at /<file name>/.
-  decks: import.meta.glob("./decks/*.ts", { eager: true, import: "default" }),
+  decks: import.meta.glob("./decks/*.{ts,tsx}", {
+    eager: true,
+    import: "default",
+  }),
   media,
 });
 ```

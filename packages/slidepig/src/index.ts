@@ -14,13 +14,17 @@ export type { SlideLook } from "./deck/resolve";
 export {
   ActionCards,
   CodeListing,
-  RichText,
   ItemGroup,
   MediaSlot,
   MoreContext,
+  Prose,
   ResourceLinks,
+  RichText,
   SlideContent,
   SlideMedia,
+  Stats,
+  builtInLayouts,
+  useSlideParts,
 } from "./deck/blocks";
 export {
   BACKGROUND_WIDTH,
@@ -52,11 +56,15 @@ export type {
   DeckAction,
   DeckBackground,
   DeckCode,
+  DeckContent,
   DeckDetail,
   DeckImageResolver,
   DeckIntro,
   DeckItem,
   DeckLayout,
+  DeckLayoutComponent,
+  DeckLayoutParts,
+  DeckLayoutProps,
   DeckLink,
   DeckMedia,
   DeckMediaDisplay,
@@ -73,4 +81,4 @@ export type {
   MediaResolver,
 } from "./images";
 export { formatDeckIssues, validateDeck } from "./deck/validate";
-export type { DeckIssue } from "./deck/validate";
+export type { DeckIssue, ValidateDeckOptions } from "./deck/validate";

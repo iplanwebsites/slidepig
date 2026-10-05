@@ -81,7 +81,9 @@ export async function validateSite(
     problems.push(`${where}: ${message}`);
 
   for (const { deck } of server.site.entries) {
-    const issues = validateDeck(deck);
+    const issues = validateDeck(deck, {
+      layouts: Object.keys(server.site.deckProps?.layouts ?? {}),
+    });
     if (issues.length) console.warn(formatDeckIssues(deck, issues));
     for (const issue of issues)
       if (issue.level === "error")

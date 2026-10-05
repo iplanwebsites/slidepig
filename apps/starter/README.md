@@ -12,7 +12,8 @@ npm run preview          # the built site through the Worker
 npm run deploy           # to Cloudflare (set "name" in wrangler.jsonc first)
 ```
 
-- `src/decks/*.ts`: one file per deck. The file name is the URL.
+- `src/decks/*.ts` or `*.tsx`: one file per deck. The file name is the URL.
+  A `.tsx` deck can bring its own components, layouts and CSS.
 - `src/site.ts`: site title, home page, robots policy.
 - `public/`: images. Reference them as `/file.jpg`.
 

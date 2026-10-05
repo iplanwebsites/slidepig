@@ -131,4 +131,85 @@ describe("renderDeckDocument", () => {
     );
     expect(html).toContain('<ul class="sp-action-cards">');
   });
+
+  it("mixes custom layouts, rich copy and per-slide CSS", () => {
+    const html = renderDeckDocument({
+      deck: defineDeck({
+        title: "Mixed",
+        layouts: {
+          pricing: ({ slide, parts, presenting }) => (
+            <div className="pricing" data-presenting={String(presenting)}>
+              {parts.copy}
+              <table>
+                <tbody>
+                  <tr>
+                    <td>{slide.id}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          ),
+          // Replaces the built-in story layout for this deck.
+          story: ({ parts }) => <div className="my-story">{parts.copy}</div>,
+        },
+        slides: [
+          {
+            id: "price",
+            title: "Pricing",
+            layout: "pricing",
+            className: "is-wide",
+            style: { "--gap": "2rem" },
+            body: [
+              "Plain `code` paragraph",
+              <ul key="list">
+                <li>
+                  A <a href="/terms">linked</a> item
+                </li>
+              </ul>,
+            ],
+          },
+          { id: "plain", title: "Plain" },
+          {
+            id: "team",
+            title: "Team",
+            layout: "case",
+            visual: <svg data-visual="team" />,
+            items: [{ title: <em>Lead</em>, text: "Runs it" }],
+          },
+          {
+            id: "custom",
+            title: "Custom",
+            render: ({ parts, index }) => (
+              <div data-index={index}>{parts.copy}</div>
+            ),
+          },
+        ],
+      }),
+    });
+    expect(html).toMatch(/<section[^>]*class="[^"]*sp-layout-pricing is-wide"/);
+    expect(html).toContain("--gap:2rem");
+    expect(html).toContain('<div class="pricing" data-presenting="false">');
+    expect(html).toContain("<p>Plain <code>code</code> paragraph</p>");
+    expect(html).toContain(
+      '<ul><li>A <a href="/terms">linked</a> item</li></ul>',
+    );
+    expect(html).not.toMatch(/<p><ul>/);
+    expect(html).toContain('<div class="my-story">');
+    expect(html).toContain('data-visual="team"');
+    expect(html).toContain("<dt><em>Lead</em></dt>");
+    expect(html).toContain('data-index="3"');
+  });
+
+  it("lets <Deck layouts> win over the deck's own", () => {
+    const html = renderDeckDocument({
+      deck: defineDeck({
+        title: "House",
+        layouts: { card: () => <p>deck card</p> },
+        slides: [{ id: "a", title: "A", layout: "card" }],
+      }),
+      layouts: { card: () => <p>house card</p> },
+    });
+    expect(html).toContain("house card");
+    expect(html).not.toContain("deck card");
+  });
 });

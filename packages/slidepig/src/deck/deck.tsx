@@ -20,7 +20,7 @@ import type {
   UseSlideshowOptions,
 } from "../react/use-slideshow";
 import type { SlideDescriptor } from "../core/types";
-import { SlideContent } from "./blocks";
+import { Prose, SlideContent } from "./blocks";
 import { navigateCarousel } from "./carousel-keys";
 import {
   DEFAULT_MEDIA_SIZES,
@@ -39,7 +39,11 @@ import {
   getTunerSettingsForTheme,
 } from "./tuner";
 import type { TunerSettings } from "./tuner";
-import type { Deck as DeckData, DeckImageResolver } from "./types";
+import type {
+  Deck as DeckData,
+  DeckImageResolver,
+  DeckLayoutComponent,
+} from "./types";
 
 const TunerPanel = lazy(() => import("./tuner-panel"));
 
@@ -51,6 +55,11 @@ export type DeckProps = {
   labels?: DeckLabelOverrides;
   /** Icons that slide items name with `icon`, added to `slideIcons`. */
   icons?: Record<string, ReactNode>;
+  /**
+   * Layouts slides can name, added to the deck's own and the built-in ones
+   * (and winning over both), e.g. a house style shared by several decks.
+   */
+  layouts?: Record<string, DeckLayoutComponent>;
   controlIcons?: SlideshowControlIcons;
   /** `sizes` for slide art. Change it along with the reading column width. */
   mediaSizes?: string;
@@ -90,6 +99,7 @@ export function Deck({
   resolver = identityResolver,
   labels: labelOverrides,
   icons,
+  layouts,
   controlIcons,
   mediaSizes = DEFAULT_MEDIA_SIZES,
   sidebar = false,
@@ -112,9 +122,19 @@ export function Deck({
       resolver,
       labels,
       icons: { ...slideIcons, ...deck.icons, ...icons },
+      layouts: { ...deck.layouts, ...layouts },
       mediaSizes,
     }),
-    [deck.media, deck.icons, resolver, labels, icons, mediaSizes],
+    [
+      deck.media,
+      deck.icons,
+      deck.layouts,
+      resolver,
+      labels,
+      icons,
+      layouts,
+      mediaSizes,
+    ],
   );
   const slides = useMemo(
     () => getDeckSlides(deck, resolver, mediaSizes),
@@ -243,11 +263,15 @@ export function Deck({
                 />
               )}
               <div>
-                <p className="sp-intro-greeting">{deck.intro.greeting}</p>
-                {deck.intro.context && <p>{deck.intro.context}</p>}
-                {deck.intro.invitation && (
-                  <p className="sp-intro-invitation">{deck.intro.invitation}</p>
-                )}
+                <Prose
+                  content={deck.intro.greeting}
+                  className="sp-intro-greeting"
+                />
+                <Prose content={deck.intro.context} />
+                <Prose
+                  content={deck.intro.invitation}
+                  className="sp-intro-invitation"
+                />
               </div>
             </header>
           )}
@@ -279,12 +303,19 @@ export function Deck({
               <section
                 key={slide.id}
                 {...getSlideProps(index)}
-                className={`sp-section sp-tone-${slide.tone ?? "light"} sp-layout-${slide.layout ?? "story"}`}
+                className={[
+                  "sp-section",
+                  `sp-tone-${slide.tone ?? "light"}`,
+                  `sp-layout-${slide.layout ?? "story"}`,
+                  slide.className ?? "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 data-has-background={background ? "true" : undefined}
                 data-sp-theme={tuned?.theme ?? slide.theme}
                 style={
-                  Object.keys(style).length
-                    ? (style as CSSProperties)
+                  Object.keys(style).length || slide.style
+                    ? ({ ...style, ...slide.style } as CSSProperties)
                     : undefined
                 }
                 aria-labelledby={`${slide.id}-title`}
@@ -293,16 +324,12 @@ export function Deck({
                   <span className="sp-section-number">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  {slide.render ? (
-                    slide.render({ index, active, presenting })
-                  ) : (
-                    <SlideContent
-                      slide={slide}
-                      index={index}
-                      active={active}
-                      presenting={presenting}
-                    />
-                  )}
+                  <SlideContent
+                    slide={slide}
+                    index={index}
+                    active={active}
+                    presenting={presenting}
+                  />
                 </div>
                 {tunerAvailable && tunerVisible && (
                   <Suspense fallback={null}>
