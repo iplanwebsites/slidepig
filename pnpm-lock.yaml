@@ -18,10 +18,10 @@ importers:
   apps/demo:
     dependencies:
       react:
-        specifier: ^19.2.0
+        specifier: ^19.3.0
         version: 19.3.0
       react-dom:
-        specifier: ^19.2.0
+        specifier: ^19.3.0
         version: 19.3.0(react@19.3.0)
       slidepig:
         specifier: workspace:*
@@ -55,10 +55,10 @@ importers:
   apps/host-page:
     dependencies:
       react:
-        specifier: ^19.2.0
+        specifier: ^19.3.0
         version: 19.3.0
       react-dom:
-        specifier: ^19.2.0
+        specifier: ^19.3.0
         version: 19.3.0(react@19.3.0)
       slidepig:
         specifier: workspace:*
@@ -83,10 +83,10 @@ importers:
   apps/root-render:
     dependencies:
       react:
-        specifier: ^19.2.0
+        specifier: ^19.3.0
         version: 19.3.0
       react-dom:
-        specifier: ^19.2.0
+        specifier: ^19.3.0
         version: 19.3.0(react@19.3.0)
       slidepig:
         specifier: workspace:*
@@ -108,10 +108,10 @@ importers:
   apps/starter:
     dependencies:
       react:
-        specifier: ^19.2.0
+        specifier: ^19.3.0
         version: 19.3.0
       react-dom:
-        specifier: ^19.2.0
+        specifier: ^19.3.0
         version: 19.3.0(react@19.3.0)
       slidepig:
         specifier: workspace:*
@@ -169,10 +169,10 @@ importers:
         specifier: ^4.0.3
         version: 4.0.7
       react:
-        specifier: ^19.2.0
+        specifier: ^19.3.0
         version: 19.3.0
       react-dom:
-        specifier: ^19.2.0
+        specifier: ^19.3.0
         version: 19.3.0(react@19.3.0)
       sharp:
         specifier: ^0.34.4

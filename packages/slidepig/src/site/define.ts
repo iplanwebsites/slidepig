@@ -22,6 +22,11 @@ export type SiteConfig = {
    * instead, for a site that is one presentation (a pitch on a subdomain).
    */
   home?: false | { title?: string; description?: string };
+  /**
+   * `false` publishes no page that lists the decks: `/` is not found and the
+   * 404 page names none, so each deck is reached only by its own link.
+   */
+  list?: boolean;
   /** Props for every `<Deck>`, such as `tuner` or `labels`. */
   deckProps?: Partial<Omit<DeckProps, "deck" | "resolver">>;
   /** Site-wide robots policy, e.g. `noindex, nofollow` for private pitches. */

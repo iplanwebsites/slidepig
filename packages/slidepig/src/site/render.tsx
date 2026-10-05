@@ -12,8 +12,9 @@ export type RenderedPage = { status: number; html: string };
  */
 export function createRenderer(site: Site) {
   const single = site.home === false;
+  const listed = site.list !== false;
   const routes = [
-    ...(single ? [] : ["/"]),
+    ...(single || !listed ? [] : ["/"]),
     ...site.entries.map((entry) => entry.href),
     "/404.html",
   ];
@@ -48,7 +49,7 @@ export function createRenderer(site: Site) {
         }),
       };
 
-    if (path === "/" && !single) {
+    if (path === "/" && !single && listed) {
       const home = site.home || {};
       return {
         status: 200,
@@ -78,7 +79,15 @@ export function createRenderer(site: Site) {
           robots: "noindex",
           stylesheets: assets.stylesheets,
           head,
-          body: index("This page does not exist.", "These do:"),
+          body: listed ? (
+            index("This page does not exist.", "These do:")
+          ) : (
+            <main className="sp-index">
+              <header className="sp-index-header">
+                <h1>This page does not exist.</h1>
+              </header>
+            </main>
+          ),
         }),
       };
 

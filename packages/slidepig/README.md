@@ -18,7 +18,7 @@ page that **reads like a document** and **presents like a slideshow**.
   for your coding agent).
 - **SSR-friendly.** Every slide is in the rendered HTML; presenting only changes
   which one is visible.
-- **Light enough to embed.** No runtime dependencies, React 19 as a peer, and
+- **Light enough to embed.** No runtime dependencies, React 19 or newer as a peer, and
   no UI library: about 15 KB gzipped for `<Deck>` plus 8 KB of CSS. The
   budget is enforced by the repo's checks.
 

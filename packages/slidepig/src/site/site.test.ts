@@ -98,3 +98,19 @@ describe("createRenderer", () => {
     expect(render("/nope/", assets)).toBeNull();
   });
 });
+
+describe("createRenderer with list: false", () => {
+  const { routes, render } = createRenderer(
+    defineSite({ title: "Decks", list: false, decks: { pitch, update } }),
+  );
+
+  it("publishes no page that lists the decks", () => {
+    expect(routes).toEqual(["/pitch/", "/update/", "/404.html"]);
+    expect(render("/", assets)).toBeNull();
+    const notFound = render("/404.html", assets)!;
+    expect(notFound.status).toBe(404);
+    expect(notFound.html).toContain("This page does not exist.");
+    expect(notFound.html).not.toContain('href="/pitch/"');
+    expect(notFound.html).not.toContain("Pitch");
+  });
+});

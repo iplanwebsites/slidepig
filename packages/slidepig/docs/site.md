@@ -58,18 +58,30 @@ the prerendered markup.
 
 ## `defineSite` options
 
-| Option        | Purpose                                                         |
-| ------------- | --------------------------------------------------------------- |
-| `title`       | site title, also the home page heading                          |
-| `description` | home page description and meta description                      |
-| `decks`       | `{ slugOrPath: deck }`, usually from `import.meta.glob`         |
-| `media`       | the `slidepig assets` manifest, for optimized images            |
-| `home`        | `{ title, description }`, or `false` for one deck served at `/` |
-| `deckProps`   | props for every `<Deck>`: `tuner`, `labels`, `sidebar`…         |
-| `robots`      | e.g. `"noindex, nofollow"` for private pitches                  |
-| `origin`      | absolute origin, enables canonical and `og:url` tags            |
-| `favicon`     | an emoji or a URL                                               |
-| `lang`        | home page language; decks declare their own                     |
+| Option        | Purpose                                                             |
+| ------------- | ------------------------------------------------------------------- |
+| `title`       | site title, also the home page heading                              |
+| `description` | home page description and meta description                          |
+| `decks`       | `{ slugOrPath: deck }`, usually from `import.meta.glob`             |
+| `media`       | the `slidepig assets` manifest, for optimized images                |
+| `home`        | `{ title, description }`, or `false` for one deck served at `/`     |
+| `list`        | `false`: no page lists the decks (`/` is a 404, the 404 names none) |
+| `deckProps`   | props for every `<Deck>`: `tuner`, `labels`, `sidebar`…             |
+| `robots`      | e.g. `"noindex, nofollow"` for private pitches                      |
+| `origin`      | absolute origin, enables canonical and `og:url` tags                |
+| `favicon`     | an emoji or a URL                                                   |
+| `lang`        | home page language; decks declare their own                         |
+
+Private pitches, each reached only by its own link:
+
+```ts
+export default defineSite({
+  title: "Decks",
+  list: false,
+  robots: "noindex, nofollow",
+  decks: { acme, globex }, // served at /acme/ and /globex/
+});
+```
 
 A single private pitch on its own subdomain:
 
