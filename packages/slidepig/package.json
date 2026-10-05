@@ -1,6 +1,6 @@
 {
   "name": "slidepig",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Web-native presentations: one page that reads like a document and presents like a slideshow. Embed a deck, or build a prerendered site of decks.",
   "keywords": [
     "slides",
