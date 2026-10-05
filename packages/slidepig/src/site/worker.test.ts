@@ -18,7 +18,7 @@ const get = (path: string, headers: Record<string, string> = {}) =>
 describe("site worker", () => {
   it("gives HTML a strong ETag and answers revalidation with a 304", async () => {
     const assets = env({ "content-type": "text/html; charset=utf-8" });
-    const first = await worker.fetch(get("/tour/"), assets);
+    const first = await worker.fetch(get("/tour"), assets);
     const etag = first.headers.get("etag")!;
     expect(etag).toMatch(/^W\/"[0-9a-f]{32}"$/);
     expect(first.headers.get("cache-control")).toBe(
@@ -27,7 +27,7 @@ describe("site worker", () => {
     expect(await first.text()).toBe(page);
 
     const again = await worker.fetch(
-      get("/tour/", { "if-none-match": etag.slice(2) }),
+      get("/tour", { "if-none-match": etag.slice(2) }),
       assets,
     );
     expect(again.status).toBe(304);

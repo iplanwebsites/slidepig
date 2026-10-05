@@ -36,10 +36,11 @@ export async function readClientAssets(dist: string): Promise<PageAssets> {
   };
 }
 
+/** `/` and `/a/` → `index.html` files, `/a` → `a.html`, `/404.html` as is. */
 export function fileForRoute(dist: string, route: string): string {
-  return route.endsWith("/")
-    ? path.join(dist, route, "index.html")
-    : path.join(dist, route);
+  if (route.endsWith("/")) return path.join(dist, route, "index.html");
+  if (path.extname(route)) return path.join(dist, route);
+  return path.join(dist, `${route}.html`);
 }
 
 export async function prerender(
@@ -112,9 +113,13 @@ export async function validateSite(
   const exists = (url: string) => {
     const pathname = decodeURI(url.split(/[?#]/)[0]!);
     const target = path.join(dist, pathname);
-    return pathname.endsWith("/")
-      ? existsSync(path.join(target, "index.html"))
-      : existsSync(target) || existsSync(path.join(target, "index.html"));
+    if (pathname.endsWith("/"))
+      return existsSync(path.join(target, "index.html"));
+    return (
+      existsSync(target) ||
+      existsSync(`${target}.html`) ||
+      existsSync(path.join(target, "index.html"))
+    );
   };
 
   for (const route of server.routes) {

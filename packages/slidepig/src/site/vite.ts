@@ -110,7 +110,11 @@ export function slidepigSite(options: SlidepigSiteOptions = {}): Plugin {
     configureServer(server) {
       server.middlewares.use(async (request, response, next) => {
         const url = (request.url ?? "/").split("?")[0]!;
-        if (!url.endsWith("/") && !url.endsWith(".html")) return next();
+        // Pages are `/`, `/a/`, `/a.html` or extensionless `/a`; Vite's own
+        // requests (`/@vite/…`, `/@fs/…`, `/node_modules/…`) are not.
+        const page = url.endsWith("/") || url.endsWith(".html");
+        if (!page && (path.extname(url) || /^\/(@|node_modules\/)/.test(url)))
+          return next();
         try {
           const module = (await server.ssrLoadModule(SERVER)) as ServerModule;
           // Resolved like a JS import so package export conditions apply,
@@ -118,15 +122,27 @@ export function slidepigSite(options: SlidepigSiteOptions = {}): Plugin {
           const styles = await server.pluginContainer.resolveId(
             "slidepig/styles.css",
           );
-          const page =
-            module.render(url, {
-              stylesheets: styles ? [`/@fs${styles.id}`] : [],
-              scripts: [`/@id/__x00__${CLIENT}`],
-            }) ?? module.render("/404.html", { stylesheets: [], scripts: [] });
-          if (!page) return next();
-          response.statusCode = page.status;
+          const assets = {
+            stylesheets: styles ? [`/@fs${styles.id}`] : [],
+            scripts: [`/@id/__x00__${CLIENT}`],
+          };
+          let rendered = module.render(url, assets);
+          if (!rendered) {
+            // `/a/` ↔ `/a`: redirect to the form the site serves, as the
+            // Worker's asset binding does in production.
+            const other = url.endsWith("/") ? url.slice(0, -1) : `${url}/`;
+            if (other && module.render(other, assets)) {
+              response.statusCode = 308;
+              response.setHeader("location", other);
+              return response.end();
+            }
+            if (!page) return next();
+            rendered = module.render("/404.html", assets);
+          }
+          if (!rendered) return next();
+          response.statusCode = rendered.status;
           response.setHeader("content-type", "text/html; charset=utf-8");
-          response.end(await server.transformIndexHtml(url, page.html));
+          response.end(await server.transformIndexHtml(url, rendered.html));
         } catch (error) {
           server.ssrFixStacktrace(error as Error);
           next(error);

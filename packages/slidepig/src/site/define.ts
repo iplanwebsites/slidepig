@@ -12,7 +12,7 @@ export type SiteConfig = {
   /**
    * The decks, keyed by slug or by file path. Pass
    * `import.meta.glob("./decks/*.{ts,tsx}", { eager: true, import: "default" })`
-   * and every file in `decks/` becomes `/<file name>/`.
+   * and every file in `decks/` becomes `/<file name>`.
    */
   decks: Record<string, unknown>;
   /** The manifest written by `slidepig assets`, for optimized images. */
@@ -27,6 +27,12 @@ export type SiteConfig = {
    * 404 page names none, so each deck is reached only by its own link.
    */
   list?: boolean;
+  /**
+   * Serve decks at `/<slug>/` (written as `<slug>/index.html`) instead of the
+   * default `/<slug>` (written as `<slug>.html`). Either way, the other form
+   * redirects to it.
+   */
+  trailingSlash?: boolean;
   /** Props for every `<Deck>`, such as `tuner` or `labels`. */
   deckProps?: Partial<Omit<DeckProps, "deck" | "resolver">>;
   /** Site-wide robots policy, e.g. `noindex, nofollow` for private pitches. */
@@ -69,7 +75,11 @@ export function defineSite(config: SiteConfig): Site {
   const resolver = createMediaResolver(config.media);
   const withHref = entries.map((entry) => ({
     ...entry,
-    href: single ? "/" : `/${entry.slug}/`,
+    href: single
+      ? "/"
+      : config.trailingSlash
+        ? `/${entry.slug}/`
+        : `/${entry.slug}`,
   }));
 
   return {

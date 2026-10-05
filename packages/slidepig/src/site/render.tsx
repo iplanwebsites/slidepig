@@ -34,7 +34,11 @@ export function createRenderer(site: Site) {
   function render(url: string, assets: PageAssets): RenderedPage | null {
     const path = url.split(/[?#]/)[0]!.replace(/index\.html$/, "");
 
-    const entry = site.entries.find((candidate) => candidate.href === path);
+    // A deck at `/a` is also its prerendered file, `/a.html`.
+    const entry = site.entries.find(
+      (candidate) =>
+        candidate.href === path || `${candidate.href}.html` === path,
+    );
     const props = entry ? site.propsFor(entry.slug) : undefined;
     if (entry && props)
       return {

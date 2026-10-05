@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { defineDeck } from "../index";
 import { defineSite } from "./define";
+import { fileForRoute } from "./build";
 import { createRenderer } from "./render";
 
 const pitch = defineDeck({
@@ -22,8 +23,8 @@ describe("defineSite", () => {
       decks: { "./decks/update.ts": update, "./decks/pitch.ts": pitch },
     });
     expect(site.entries.map((entry) => [entry.slug, entry.href])).toEqual([
-      ["pitch", "/pitch/"],
-      ["update", "/update/"],
+      ["pitch", "/pitch"],
+      ["update", "/update"],
     ]);
   });
 
@@ -68,14 +69,14 @@ describe("createRenderer", () => {
   const { routes, render } = createRenderer(site);
 
   it("lists a home page, every deck and a 404 page", () => {
-    expect(routes).toEqual(["/", "/pitch/", "/update/", "/404.html"]);
+    expect(routes).toEqual(["/", "/pitch", "/update", "/404.html"]);
   });
 
   it("renders a home page without scripts that links every deck", () => {
     const page = render("/", assets)!;
     expect(page.status).toBe(200);
-    expect(page.html).toContain('href="/pitch/"');
-    expect(page.html).toContain('href="/update/"');
+    expect(page.html).toContain('href="/pitch"');
+    expect(page.html).toContain('href="/update"');
     expect(page.html).not.toContain("<script");
     expect(page.html).toContain(
       '<meta name="robots" content="noindex, nofollow">',
@@ -83,13 +84,14 @@ describe("createRenderer", () => {
   });
 
   it("renders deck pages ready to hydrate", () => {
-    const page = render("/pitch/index.html", assets)!;
+    expect(render("/pitch.html", assets)?.status).toBe(200);
+    const page = render("/pitch", assets)!;
     expect(page.html).toContain('<div id="deck" data-deck="pitch">');
     expect(page.html).toContain(
       '<script type="module" src="/app.js"></script>',
     );
     expect(page.html).toContain(
-      '<link rel="canonical" href="https://decks.example.com/pitch/">',
+      '<link rel="canonical" href="https://decks.example.com/pitch">',
     );
   });
 
@@ -105,12 +107,32 @@ describe("createRenderer with list: false", () => {
   );
 
   it("publishes no page that lists the decks", () => {
-    expect(routes).toEqual(["/pitch/", "/update/", "/404.html"]);
+    expect(routes).toEqual(["/pitch", "/update", "/404.html"]);
     expect(render("/", assets)).toBeNull();
     const notFound = render("/404.html", assets)!;
     expect(notFound.status).toBe(404);
     expect(notFound.html).toContain("This page does not exist.");
-    expect(notFound.html).not.toContain('href="/pitch/"');
+    expect(notFound.html).not.toContain('href="/pitch"');
     expect(notFound.html).not.toContain("Pitch");
+  });
+});
+
+describe("trailing slashes", () => {
+  it("serves decks at /<slug> by default, and /<slug>/ on request", () => {
+    expect(defineSite({ title: "D", decks: { pitch } }).entries[0]!.href).toBe(
+      "/pitch",
+    );
+    const slashed = createRenderer(
+      defineSite({ title: "D", trailingSlash: true, decks: { pitch } }),
+    );
+    expect(slashed.routes).toContain("/pitch/");
+    expect(slashed.render("/pitch/index.html", assets)?.status).toBe(200);
+  });
+
+  it("writes /a as a.html and /a/ as a/index.html", () => {
+    expect(fileForRoute("dist", "/")).toBe("dist/index.html");
+    expect(fileForRoute("dist", "/pitch")).toBe("dist/pitch.html");
+    expect(fileForRoute("dist", "/pitch/")).toBe("dist/pitch/index.html");
+    expect(fileForRoute("dist", "/404.html")).toBe("dist/404.html");
   });
 });

@@ -20,7 +20,7 @@ import media from "./generated/media-manifest.json";
 export default defineSite({
   title: "Presentations",
   description: "Decks that read like documents and present like slides.",
-  // Every file in decks/ is a deck, served at /<file name>/.
+  // Every file in decks/ is a deck, served at /<file name>.
   decks: import.meta.glob("./decks/*.{ts,tsx}", {
     eager: true,
     import: "default",
@@ -61,19 +61,20 @@ the prerendered markup.
 
 ## `defineSite` options
 
-| Option        | Purpose                                                             |
-| ------------- | ------------------------------------------------------------------- |
-| `title`       | site title, also the home page heading                              |
-| `description` | home page description and meta description                          |
-| `decks`       | `{ slugOrPath: deck }`, usually from `import.meta.glob`             |
-| `media`       | the `slidepig assets` manifest, for optimized images                |
-| `home`        | `{ title, description }`, or `false` for one deck served at `/`     |
-| `list`        | `false`: no page lists the decks (`/` is a 404, the 404 names none) |
-| `deckProps`   | props for every `<Deck>`: `tuner`, `labels`, `sidebar`…             |
-| `robots`      | e.g. `"noindex, nofollow"` for private pitches                      |
-| `origin`      | absolute origin, enables canonical and `og:url` tags                |
-| `favicon`     | an emoji or a URL                                                   |
-| `lang`        | home page language; decks declare their own                         |
+| Option          | Purpose                                                                     |
+| --------------- | --------------------------------------------------------------------------- |
+| `title`         | site title, also the home page heading                                      |
+| `description`   | home page description and meta description                                  |
+| `decks`         | `{ slugOrPath: deck }`, usually from `import.meta.glob`                     |
+| `media`         | the `slidepig assets` manifest, for optimized images                        |
+| `home`          | `{ title, description }`, or `false` for one deck served at `/`             |
+| `trailingSlash` | `true`: decks at `/<slug>/` instead of `/<slug>` (the other form redirects) |
+| `list`          | `false`: no page lists the decks (`/` is a 404, the 404 names none)         |
+| `deckProps`     | props for every `<Deck>`: `tuner`, `labels`, `sidebar`…                     |
+| `robots`        | e.g. `"noindex, nofollow"` for private pitches                              |
+| `origin`        | absolute origin, enables canonical and `og:url` tags                        |
+| `favicon`       | an emoji or a URL                                                           |
+| `lang`          | home page language; decks declare their own                                 |
 
 Private pitches, each reached only by its own link:
 
@@ -137,7 +138,7 @@ npx slidepig new q3-review --title "Q3 review"
 
 writes `src/decks/q3-review.ts` with a starter outline. With
 `import.meta.glob` there is nothing to register: the next build serves it at
-`/q3-review/`.
+`/q3-review`.
 
 ## Weight
 

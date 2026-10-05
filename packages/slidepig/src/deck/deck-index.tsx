@@ -7,7 +7,7 @@ import { resolveBackground } from "./resolve";
 import type { Deck, DeckImageResolver } from "./types";
 
 export type DeckIndexEntry = {
-  /** Where the deck is served, e.g. `/tour/`. */
+  /** Where the deck is served, e.g. `/tour`. */
   href: string;
   deck: Deck;
 };

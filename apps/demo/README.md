@@ -16,7 +16,7 @@ scripts/make-art.mjs   renders the background art in public/art/
 
 `pnpm build` runs `slidepig assets` (AVIF/WebP derivatives, cached), then
 `vite build`, which through the `slidepigSite()` plugin builds the client and
-the renderer, prerenders `/`, `/tour/`, `/minimal/` and `/404.html`, and
+the renderer, prerenders `/`, `/tour`, `/minimal`, `/mix` and `/404.html`, and
 validates them. The build fails on deck errors, invalid HTML, missing
 titles or descriptions, dead `#links`, or any referenced file missing from
 `dist/`.
@@ -34,7 +34,7 @@ The Worker makes hashed files under `/assets/` and `/_media/` immutable for a
 year and keeps HTML at `max-age=0, must-revalidate`. Pages carry a weak ETag
 and, through the `version_metadata` binding, a `Last-Modified` from the
 deploy time, so unchanged pages cost a 304. Missing routes get `404.html`
-with a 404 status, and `/tour` redirects to `/tour/`.
+with a 404 status, and `/tour/` redirects to `/tour`.
 
 The production deployment to slidepig.felixmenard.com is configured outside
 this repository.
@@ -46,4 +46,4 @@ pnpm new my-deck
 ```
 
 writes `src/decks/my-deck.ts`. Every file in `src/decks/` is picked up
-automatically and served at `/<file name>/`.
+automatically and served at `/<file name>`.
