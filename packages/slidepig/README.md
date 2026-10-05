@@ -271,7 +271,7 @@ export default defineDeck({
 | `controlIcons`          | built-in SVGs   | replace the control bar icons                           |
 | `sidebar`               | `false`         | a fixed slide list beside the reading view              |
 | `tuner`                 | `"localhost"`   | `true` to ship it, `false` to remove it                 |
-| `tunerInitiallyVisible` | `true`          | <kbd>D</kbd> toggles it either way                      |
+| `tunerInitiallyVisible` | `false`         | <kbd>D</kbd> toggles it either way                      |
 | `slideshow`             |                 | options passed to `useSlideshow`                        |
 | `controls`              |                 | props passed to `SlideshowControls`                     |
 | `mediaSizes`            | reading column  | `sizes` for slide art                                   |

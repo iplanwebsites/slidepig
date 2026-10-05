@@ -71,7 +71,7 @@ export type DeckProps = {
    * a development host, so it never ships to an audience.
    */
   tuner?: boolean | "localhost";
-  /** Whether the tuner starts open. Defaults to true; D toggles it. */
+  /** Whether the tuner starts open. Defaults to false; D toggles it. */
   tunerInitiallyVisible?: boolean;
   /** Passed through to `useSlideshow`. */
   slideshow?: Partial<Omit<UseSlideshowOptions, "slides">>;
@@ -104,7 +104,7 @@ export function Deck({
   mediaSizes = DEFAULT_MEDIA_SIZES,
   sidebar = false,
   tuner = "localhost",
-  tunerInitiallyVisible = true,
+  tunerInitiallyVisible = false,
   slideshow: slideshowOptions,
   controls,
   className,
