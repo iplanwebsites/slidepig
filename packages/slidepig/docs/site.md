@@ -4,6 +4,10 @@ A folder of [slidepig](https://www.npmjs.com/package/slidepig) decks becomes
 a site: a home page listing them, one prerendered page per deck, build-time
 validation, and a Cloudflare Worker to serve it all.
 
+Try the [live examples](https://slidepig.com) or follow the
+[getting started guide](https://slidepig.com/guide). Site tooling requires
+Node.js 22.12+; deck components require React 19+.
+
 The quickest start is `npx slidepig create my-decks`. By hand, it is three
 files, plus the build tools as dev dependencies:
 
@@ -61,20 +65,20 @@ the prerendered markup.
 
 ## `defineSite` options
 
-| Option          | Purpose                                                                     |
-| --------------- | --------------------------------------------------------------------------- |
-| `title`         | site title, also the home page heading                                      |
-| `description`   | home page description and meta description                                  |
-| `decks`         | `{ slugOrPath: deck }`, usually from `import.meta.glob`                     |
-| `media`         | the `slidepig assets` manifest, for optimized images                        |
-| `home`          | `{ title, description }`, or `false` for one deck served at `/`             |
-| `trailingSlash` | `true`: decks at `/<slug>/` instead of `/<slug>` (the other form redirects) |
-| `list`          | `false`: no page lists the decks (`/` is a 404, the 404 names none)         |
-| `deckProps`     | props for every `<Deck>`: `tuner`, `labels`, `sidebar`…                     |
-| `robots`        | e.g. `"noindex, nofollow"` for private pitches                              |
-| `origin`        | absolute origin, enables canonical and `og:url` tags                        |
-| `favicon`       | an emoji or a URL                                                           |
-| `lang`          | home page language; decks declare their own                                 |
+| Option          | Purpose                                                                              |
+| --------------- | ------------------------------------------------------------------------------------ |
+| `title`         | site title, also the home page heading                                               |
+| `description`   | home page description and meta description                                           |
+| `decks`         | `{ slugOrPath: deck }`, usually from `import.meta.glob`                              |
+| `media`         | the `slidepig assets` manifest, for optimized images                                 |
+| `home`          | `{ title, description, render, stylesheets }`, or `false` for one deck served at `/` |
+| `trailingSlash` | `true`: decks at `/<slug>/` instead of `/<slug>` (the other form redirects)          |
+| `list`          | `false`: no page lists the decks (`/` is a 404, the 404 names none)                  |
+| `deckProps`     | props for every `<Deck>`: `tuner`, `labels`, `sidebar`…                              |
+| `robots`        | e.g. `"noindex, nofollow"` for private pitches                                       |
+| `origin`        | absolute origin, enables canonical and `og:url` tags                                 |
+| `favicon`       | an emoji or a URL                                                                    |
+| `lang`          | home page language; decks declare their own                                          |
 
 Private pitches, each reached only by its own link:
 
@@ -97,6 +101,33 @@ export default defineSite({
   decks: { pitch },
 });
 ```
+
+## A custom home page
+
+The default home is a static deck listing. A site can supply its own React
+markup and home-only styles without changing deck pages or adding JavaScript
+to the homepage:
+
+```tsx
+import { DeckIndex } from "slidepig";
+
+// Inside defineSite({ ... })
+home: {
+  title: "Our presentations",
+  stylesheets: ["/home.css"], // public/home.css; scope classes to your page
+  render: (props) => (
+    <DeckIndex {...props}>
+      <footer>Something worth sharing.</footer>
+    </DeckIndex>
+  ),
+},
+```
+
+`render` receives `DeckIndexProps`: title, description, deck entries, and the
+image resolver. Return a complete page body with one `<main>` and one `<h1>`.
+Keep a link to every deck: build validation checks them. The 404 page keeps
+the default listing, and `list: false` or `home: false` bypasses the custom
+homepage. Put stylesheet files in `public/`; they are validated during builds.
 
 ## The Worker
 

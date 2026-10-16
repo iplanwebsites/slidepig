@@ -66,8 +66,14 @@ export default defineDeck({
         "A string is a paragraph, and `backticks` become code.",
         <p key="link">
           Anything else renders as given: a{" "}
-          <a href="https://www.npmjs.com/package/slidepig">link</a>,{" "}
-          <em>emphasis</em>, or a list.
+          <a
+            href="https://www.npmjs.com/package/slidepig"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            link
+          </a>
+          , <em>emphasis</em>, or a list.
         </p>,
         <ul key="list">
           <li>Items, captions and stats take the same.</li>

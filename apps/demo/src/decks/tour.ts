@@ -127,7 +127,7 @@ export default defineDeck({
       background: "paper",
       backgroundOptions: ["paper", "modes", "sunrise"],
       body: [
-        "A pitch usually lives twice: as slides for the meeting and as a PDF or doc for everyone who missed it. The PDF cannot play a video, cannot be read on a phone, and nobody can link to page seven.",
+        "A pitch usually lives twice: as slides for the meeting and as a PDF or doc for everyone who missed it. The PDF loses playable media, asks phone readers to zoom around, and makes sharing one idea harder than sending a slide link.",
         "A web page fixes all of that, until you try to present it. Scrolling in front of an audience is clumsy, and nothing tells you where one idea ends.",
         "slidepig keeps the page and adds the missing mode. Every slide is a section with its own URL, and presenting is just a different way of showing the same sections.",
       ],
@@ -315,7 +315,7 @@ export default defineDeck({
       items: [
         {
           title: "slidepig",
-          text: "Hash navigation, keyboard and fullscreen, preloading, controls, layouts, lightbox and carousel, the tuner. No dependencies.",
+          text: "Hash navigation, keyboard and fullscreen, preloading, controls, layouts, lightbox and carousel, the tuner. Zero runtime dependencies; React is a peer.",
         },
         {
           title: "slidepig/site and slidepig/assets",
@@ -346,7 +346,7 @@ export default defineDeck({
         {
           label: "01 · Install",
           title: "npm i slidepig",
-          text: "Import `slidepig/styles.css` once. React 18 or 19 is the only peer dependency.",
+          text: "Import `slidepig/styles.css` once. React 19 or newer is required; React and React DOM are peers.",
         },
         {
           label: "02 · Write",
@@ -379,7 +379,7 @@ export default defineDeck({
         },
         {
           label: "Start a site",
-          href: "https://www.npmjs.com/package/slidepig#a-new-presentation",
+          href: "/guide",
           note: "npx slidepig create my-decks",
         },
       ],

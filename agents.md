@@ -32,7 +32,7 @@ pnpm check   # run before every push (there is no CI): format, typecheck, tests,
 
 ## Deploy
 
-The demo deploys to https://slidepig.felixmenard.com with
+The demo deploys to https://slidepig.com with
 `sh _internal/deploy.sh` (private, gitignored; `--dry-run` to check). Run
 `pnpm check` first.
 

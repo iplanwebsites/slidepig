@@ -1,5 +1,6 @@
+import { createElement } from "react";
 import { describe, expect, it } from "vitest";
-import { defineDeck } from "../index";
+import { DeckIndex, defineDeck } from "../index";
 import { defineSite } from "./define";
 import { fileForRoute } from "./build";
 import { createRenderer } from "./render";
@@ -134,5 +135,56 @@ describe("trailing slashes", () => {
     expect(fileForRoute("dist", "/pitch")).toBe("dist/pitch.html");
     expect(fileForRoute("dist", "/pitch/")).toBe("dist/pitch/index.html");
     expect(fileForRoute("dist", "/404.html")).toBe("dist/404.html");
+  });
+});
+
+describe("custom home pages", () => {
+  it("passes resolved listing props and loads custom styles only on the home page", () => {
+    const site = defineSite({
+      title: "Decks",
+      description: "Our presentations",
+      decks: { pitch, update },
+      home: {
+        title: "Welcome to the pen",
+        stylesheets: ["/brand.css"],
+        render: (props) => {
+          expect(props.title).toBe("Welcome to the pen");
+          expect(props.description).toBe("Our presentations");
+          expect(props.resolver).toBe(site.resolver);
+          return createElement(DeckIndex, props, "Custom footer");
+        },
+      },
+    });
+    const { render } = createRenderer(site);
+    const home = render("/", assets)!;
+    expect(home.html).toContain("Welcome to the pen");
+    expect(home.html).toContain("Custom footer");
+    expect(home.html).toContain('href="/pitch"');
+    expect(home.html).toContain('href="/update"');
+    expect(home.html).toContain('href="/app.css"');
+    expect(home.html).toContain('href="/brand.css"');
+    expect(home.html).not.toContain("<script");
+    for (const route of ["/pitch", "/404.html"]) {
+      const page = render(route, assets)!;
+      expect(page.html).not.toContain("Custom footer");
+      expect(page.html).not.toContain('href="/brand.css"');
+    }
+  });
+
+  it("does not invoke a custom home renderer when listings are disabled", () => {
+    const { render } = createRenderer(
+      defineSite({
+        title: "Private",
+        list: false,
+        decks: { pitch },
+        home: {
+          render: () => {
+            throw new Error("Must not list private decks");
+          },
+        },
+      }),
+    );
+    expect(render("/", assets)).toBeNull();
+    expect(render("/404.html", assets)?.html).not.toContain('href="/pitch"');
   });
 });

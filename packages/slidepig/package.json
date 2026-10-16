@@ -22,6 +22,7 @@
     "dist",
     "template",
     "docs",
+    "skills",
     "README.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md"
@@ -180,7 +181,7 @@
     "url": "git+https://github.com/iplanwebsites/slidepig.git",
     "directory": "packages/slidepig"
   },
-  "homepage": "https://github.com/iplanwebsites/slidepig#readme",
+  "homepage": "https://slidepig.com",
   "bugs": {
     "url": "https://github.com/iplanwebsites/slidepig/issues"
   }

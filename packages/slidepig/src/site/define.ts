@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import type { DeckIndexProps } from "../deck/deck-index";
 import { createMediaResolver } from "../images";
 import type { MediaManifestInput } from "../images";
 import type { DeckData, DeckImageResolver, DeckProps } from "../index";
@@ -21,7 +23,16 @@ export type SiteConfig = {
    * The home page listing every deck. `false` serves a single deck at `/`
    * instead, for a site that is one presentation (a pitch on a subdomain).
    */
-  home?: false | { title?: string; description?: string };
+  home?:
+    | false
+    | {
+        title?: string;
+        description?: string;
+        /** Custom static home page. Keep a link to every deck for validation. */
+        render?: (props: DeckIndexProps) => ReactNode;
+        /** Home-only stylesheets, e.g. a CSS file in public/. */
+        stylesheets?: readonly string[];
+      };
   /**
    * `false` publishes no page that lists the decks: `/` is not found and the
    * 404 page names none, so each deck is reached only by its own link.

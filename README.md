@@ -2,135 +2,156 @@
 
 # 🐷 slidepig
 
-**Decks that are web pages.**
-One page that reads like a document and presents like a slideshow.
+**Small pig. Big ideas.**
 
-_Slides that fly. Pigs, too, apparently._
+Decks that are web pages. Write once. Scroll to read. Press **F** to present.
+
+[Website](https://slidepig.com) · [Try the tour](https://slidepig.com/tour) · [Get started](https://slidepig.com/guide) · [API](packages/slidepig/README.md) · [npm](https://www.npmjs.com/package/slidepig)
 
 </div>
 
 ---
 
-## Why the pig?
+The link you send before the meeting should be the deck you present in it.
+slidepig turns typed slide data into one responsive web page: an article for
+readers, a fullscreen slideshow for presenters, and a link to every slide.
+Images, videos, and your own React components come along for the ride.
 
-Most decks live a double life. There's the slide file for the meeting, and
-the PDF for everyone who missed it. That PDF can't play a video, can't be
-read on a phone, and nobody can link to page seven. Exporting it is putting
-lipstick on a pig.
+## Make your first deck
 
-slidepig skips the lipstick. You write a deck once, as plain data, and get a
-single web page:
+For a new site:
 
-- 📖 **Scroll it** like an article, on any screen.
-- 🎬 **Press <kbd>F</kbd>** and the same page presents full screen.
-- 🔗 **Link any slide.** `#pricing` opens right on it, in either mode.
-
-Same page, same URL, same content. Not a single hog-washed export.
-
-## Go whole hog, or just a snout
-
-| You want                                                | Oink this                                                    |
-| ------------------------------------------------------- | ------------------------------------------------------------ |
-| 🏡 a whole sty of decks, or one pitch on its own domain | `npx slidepig create my-decks`                               |
-| 🐖 another deck in your sty                             | `npm run new -- my-pitch`, then edit `src/decks/my-pitch.ts` |
-| 🐽 one deck piggybacking on an existing React site      | `npm i slidepig`, render `<Deck deck={deck} embedded />`     |
-| 🪶 a deck as the whole page, no server                  | `mountDeck(element, { deck })`                               |
-
-A deck is just data:
-
-```ts
-import { defineDeck } from "slidepig";
-
-export default defineDeck({
-  title: "Our seed round",
-  slides: [
-    { id: "hello", layout: "hero", title: "This little piggy went to market." },
-    { id: "plan", title: "And this one raised a round." },
-    { id: "bye", layout: "closing", title: "Wee wee wee, all the way home." },
-  ],
-});
+```sh
+npx slidepig create my-decks
+cd my-decks
+npm install
+npm run dev
 ```
 
-## What's in the trough
+Open the local URL, then edit the deck in `src/decks/`. To add another:
 
-- 🐷 **Lean as a racing pig.** No runtime dependencies, React as a peer, no
-  UI kit. A `<Deck>` costs about 15 KB gzipped plus 8 KB of CSS, and
-  `pnpm check` squeals if that grows.
-- ⌨️ **Built for the person on stage.** <kbd>↑</kbd> <kbd>↓</kbd> change
-  slides, <kbd>←</kbd> <kbd>→</kbd> drive the carousel, <kbd>Space</kbd> plays
-  the video, <kbd>Esc</kbd> heads back to reading. The next slide's images are
-  already decoded before you advance.
-- 🔤 **Typed snouts.** `defineDeck` knows every media, theme and background
-  name, so a typo is a compile error, not a blank square on stage.
-- 🎚️ **A visual tuner.** Press <kbd>D</kbd> on localhost to try backgrounds,
-  themes and colors live, then copy the settings back into your deck (or hand
-  them to your coding agent).
-- 🖼️ **Images that slim down.** Optional AVIF/WebP derivatives and blur
-  placeholders. The first deck went from 29 MB of art to 3.2 MB delivered.
-- 🧼 **A clean sty.** `slidepig/site` prerenders every deck, validates every
-  page (HTML, links, every slide, every image), and serves it all from a
-  Cloudflare Worker. A broken deck never leaves the farm.
+```sh
+npm run new -- my-pitch
+```
 
-slidepig wasn't dreamed up in a barn: it was extracted from two real pitch
-decks, once the second one showed what was mechanics and what was content.
+Edit `src/decks/my-pitch.ts`; its filename becomes its URL. No registration step.
+Use Node.js 22.12+ for the site tooling and React 19+ for the library.
+The [getting started guide](https://slidepig.com/guide) walks through writing,
+tuning, and publishing a deck.
 
-## The pen
+For an existing React app, run `npm i slidepig`:
 
-One npm package, [`slidepig`](packages/slidepig), and the apps that keep it
-honest.
+```tsx
+import { Deck, defineDeck } from "slidepig";
+import "slidepig/styles.css";
 
-| Path                                     | Who lives here                                                |
-| ---------------------------------------- | ------------------------------------------------------------- |
-| [`packages/slidepig`](packages/slidepig) | the pig itself: library, site tooling, image pipeline, CLI    |
-| [`apps/starter`](apps/starter)           | the piglet `slidepig create` hands you, built by `pnpm check` |
-| [`apps/demo`](apps/demo)                 | the show pig: a tour of slidepig, made with slidepig          |
-| [`apps/host-page`](apps/host-page)       | a deck piggybacking on an ordinary website                    |
-| [`apps/root-render`](apps/root-render)   | the runt: one `mountDeck` call, and that's it                 |
+const deck = defineDeck({
+  title: "Something worth sharing",
+  slides: [
+    {
+      id: "hello",
+      layout: "hero",
+      title: "This little piggy had an idea.",
+      body: ["And put it on the web."],
+    },
+    { id: "next", title: "Here's what happens next." },
+  ],
+});
 
-Inside the package, parts are imported by path: `slidepig` (the deck),
-`slidepig/react` (headless), `slidepig/site` (a site of decks),
-`slidepig/assets` (images), and the `slidepig` command (`create`, `new`,
-`assets`). Installing it drags nothing else into the mud: build tools are
-optional peers that only the build steps load.
+export function Pitch() {
+  return <Deck deck={deck} embedded />;
+}
+```
 
-## Mucking about (development)
+`embedded` makes the deck a labelled region inside a host page. Omit it when
+the deck is the whole page. For a standalone mount or framework integration,
+see the [API and recipes](packages/slidepig/README.md).
+
+## Give your agent a skill
+
+The [slidepig skill](packages/slidepig/skills/slidepig/SKILL.md) teaches coding
+agents how to write decks, embed them in React, style them, and validate them.
+It ships in the npm package. After installing slidepig, run these commands
+from your presentation project to install it for Codex:
+
+```sh
+mkdir -p .agents/skills
+cp -R node_modules/slidepig/skills/slidepig .agents/skills/
+```
+
+Then ask: `Use $slidepig to build a pitch deck for our next product launch.`
+See the [installation guide](packages/slidepig/README.md#agent-skill) for other
+agents, updates, and discovery troubleshooting.
+
+## Why the pig?
+
+A small library with room for big ideas:
+
+- **One URL, two modes.** Read a responsive page or present it fullscreen.
+  Share `/pitch#plan` to link straight to a slide.
+- **Lean by design.** Zero runtime dependencies; React is a peer. About 15 KB
+  gzipped for `<Deck>` plus 8 KB of CSS, with size budgets checked in the repo.
+- **Ready for the room.** Keyboard navigation, carousel and video controls,
+  and image preloading for the next slide.
+- **Your content, your components.** Typed slide data, nine built-in layouts,
+  or your own React visuals, layouts, and CSS. No template ceiling.
+- **Try the look live.** Press **D** on localhost to tune backgrounds, themes,
+  and colors, then copy the settings into your source.
+- **Build with confidence.** Optional site tooling prerenders and validates
+  decks, HTML, links, and local assets. Optional image tooling generates
+  AVIF/WebP derivatives and blur placeholders.
+
+slidepig was extracted from two real pitch decks. The library keeps the
+shared mechanics; the ideas stay in your repository.
+
+## A few from the pen
+
+| Example                                           | What to explore                                         |
+| ------------------------------------------------- | ------------------------------------------------------- |
+| [The tour](https://slidepig.com/tour)             | A deck explaining itself: layouts, media, and the tuner |
+| [The smallest deck](https://slidepig.com/minimal) | Three slides and almost no configuration                |
+| [Mix and match](https://slidepig.com/mix)         | Custom React components, layouts, and CSS               |
+| [Your first deck](https://slidepig.com/guide)     | A practical guide, made with slidepig                   |
+
+## Documentation
+
+- [Library API and React integration](packages/slidepig/README.md)
+- [Sites, prerendering, validation, and deployment](packages/slidepig/docs/site.md)
+- [Image pipeline](packages/slidepig/docs/assets.md)
+- [Contributing and local development](CONTRIBUTING.md)
+- [Brand and writing](docs/brand.md)
+
+## Workspace map
+
+One published package, `slidepig`, and the apps that keep it honest.
+
+| Path                                     | Purpose                                                                         |
+| ---------------------------------------- | ------------------------------------------------------------------------------- |
+| [`packages/slidepig`](packages/slidepig) | Library, site tooling, image pipeline, and CLI                                  |
+| [`apps/starter`](apps/starter)           | Minimal template handed out by `slidepig create`                                |
+| [`apps/demo`](apps/demo)                 | The public website at [slidepig.com](https://slidepig.com), built with slidepig |
+| [`apps/host-page`](apps/host-page)       | A deck embedded in an ordinary website                                          |
+| [`apps/root-render`](apps/root-render)   | A standalone `mountDeck` example                                                |
 
 ```sh
 pnpm install
-pnpm dev          # builds the package, then the demo with SSR on :4900
-pnpm check        # run before every push: format, types, tests, builds, size, scaffold
-pnpm build        # every app, prerendered and validated
-pnpm --filter slidepig-demo preview   # the built demo through the real Worker, :4901
+pnpm dev          # builds the package, then serves the demo with SSR on :4900
+pnpm check        # format, types, tests, builds, validation, size, scaffold
 ```
 
-Inside this workspace, the demo reads the library's TypeScript source, so
-edits hot-reload. `apps/starter` and `apps/host-page` deliberately eat from
-`dist/`, exactly like an npm install would.
-
-The demo's background art is generated, no pigs harmed:
-`pnpm --filter slidepig-demo art`.
-
-## Taking it to market
-
-```sh
-pnpm check
-cd packages/slidepig && pnpm publish   # prepack copies apps/starter into template/
-```
+Build tools are optional peers loaded by Node entries. Browser entries never
+pull them in. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
 
 ## License
 
 [Business Source License 1.1](LICENSE). Copyright © 2026 Félix Ménard.
 
-Free to read, modify and share, and free in production for your own
-presentations and for presentations you build for clients. Not permitted:
-offering slidepig, or anything built with it, as a way for others to make
-presentations. That covers AI agents and generators, hosted builders, and
-reselling it or kits built on it. Each version becomes open source under
-MPL-2.0 four years after its release. For other arrangements, contact the
-author.
-
-<div align="center">
+Source available, and free in production for your own presentations and for
+presentations you build for clients. Offering slidepig, or anything built
+with it, as a way for others to make presentations requires another
+arrangement. This includes AI generators, hosted builders, and reselling it
+or kits built on it. Each version becomes open source under MPL-2.0 four
+years after its release. See the license for the full terms; contact the
+author for other arrangements.
 
 🐷 _Oink. Now go make something worth presenting._
-
-</div>

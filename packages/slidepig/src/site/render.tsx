@@ -64,12 +64,19 @@ export function createRenderer(site: Site) {
           lang: site.lang ?? "en",
           canonical: canonical("/"),
           robots: site.robots,
-          stylesheets: assets.stylesheets,
+          stylesheets: [...assets.stylesheets, ...(home.stylesheets ?? [])],
           head,
-          body: index(
-            home.title ?? site.title,
-            home.description ?? site.description,
-          ),
+          body: home.render
+            ? home.render({
+                title: home.title ?? site.title,
+                description: home.description ?? site.description,
+                decks: site.entries.map(({ href, deck }) => ({ href, deck })),
+                resolver: site.resolver,
+              })
+            : index(
+                home.title ?? site.title,
+                home.description ?? site.description,
+              ),
         }),
       };
     }

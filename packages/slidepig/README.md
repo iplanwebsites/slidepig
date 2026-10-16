@@ -1,5 +1,8 @@
 # slidepig 🐷
 
+**Small pig. Big ideas.** [Website](https://slidepig.com) ·
+[Live tour](https://slidepig.com/tour) · [Getting started](https://slidepig.com/guide)
+
 Decks that are web pages. Write slides once as typed data; slidepig renders one
 page that **reads like a document** and **presents like a slideshow**.
 
@@ -23,6 +26,20 @@ page that **reads like a document** and **presents like a slideshow**.
   budget is enforced by the repo's checks.
 
 ## Quick start
+
+For a new presentation site (Node.js 22.12+):
+
+```sh
+npx slidepig create my-decks
+cd my-decks
+npm install
+npm run dev
+```
+
+Edit a file in `src/decks/`, or run `npm run new -- my-pitch` to add one.
+See the [site guide](docs/site.md) for builds and deployment.
+
+For an existing React 19+ app:
 
 ```sh
 npm i slidepig
@@ -359,6 +376,46 @@ const slideshow = useSlideshow({ slides, inactiveSlideStrategy: "stacked" });
   <SlideshowControls controller={slideshow} />
 </div>;
 ```
+
+## Agent skill
+
+The package includes a [slidepig skill](skills/slidepig/SKILL.md): reusable
+instructions for coding agents that create, edit, style, embed, and validate
+slidepig decks. Installing the library and installing the skill are separate
+steps; the skill adds instructions, not runtime code.
+
+After `npm install slidepig` (or `npm install` in a generated site), run this
+from your project root to install the skill for Codex:
+
+```sh
+mkdir -p .agents/skills
+cp -R node_modules/slidepig/skills/slidepig .agents/skills/
+```
+
+Codex discovers project skills in `.agents/skills/`. Ask it:
+
+```text
+Use $slidepig to create a product pitch in this project.
+```
+
+It can also select the skill automatically for matching tasks. If it does
+not appear in the skill selector, restart Codex. See the
+[official skill documentation](https://learn.chatgpt.com/docs/build-skills)
+for discovery and invocation details.
+
+For another agent that supports `SKILL.md`, copy the same `slidepig` folder
+into that agent's documented skill directory. For agents without skill
+discovery, point them at the file explicitly:
+
+```text
+Read node_modules/slidepig/skills/slidepig/SKILL.md and follow it to create
+and validate a deck in this project.
+```
+
+You can commit the copied skill to share it with your team. After upgrading
+slidepig, repeat the copy to refresh its instructions; this overwrites local
+edits to the copied skill, so review those first. Keep project-specific
+instructions in your project's agent instruction file.
 
 ## License
 
