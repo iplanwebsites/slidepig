@@ -6,6 +6,10 @@
 Decks that are web pages. Write slides once as typed data; slidepig renders one
 page that **reads like a document** and **presents like a slideshow**.
 
+Build with your coding agent using the bundled skill, or edit the slide data
+yourself. Start with built-in layouts, then bring your own images, CSS, and
+React components. Your presentation stays in your project as ordinary code.
+
 - **One URL, two modes.** Visitors scroll an accessible, responsive article.
   Press <kbd>F</kbd> and the same page presents full-screen. No export, no PDF,
   no second copy drifting out of date.
@@ -30,11 +34,16 @@ page that **reads like a document** and **presents like a slideshow**.
 For a new presentation site (Node.js 22.12+):
 
 ```sh
-npx slidepig create my-decks
+npx slidepig@latest create my-decks --skill
 cd my-decks
 npm install
 npm run dev
 ```
+
+The command copies a working example directly from the package. `--skill`
+also copies the bundled agent skill into `.agents/skills/slidepig/`. Ask your
+coding agent to read that skill and customize `src/decks/welcome.ts`, or edit
+the deck yourself. Omit `--skill` for a minimal project without agent files.
 
 Edit a file in `src/decks/`, or run `npm run new -- my-pitch` to add one.
 See the [site guide](docs/site.md) for builds and deployment.
@@ -160,7 +169,7 @@ than rendering again.
 [`slidepig/site`](docs/site.md) packages this
 whole setup: a folder of decks becomes a home page plus one prerendered,
 validated page per deck, served by a Cloudflare Worker. Start one with
-`npx slidepig create my-decks`.
+`npx slidepig@latest create my-decks --skill`.
 
 ## Slides
 
@@ -384,7 +393,10 @@ instructions for coding agents that create, edit, style, embed, and validate
 slidepig decks. Installing the library and installing the skill are separate
 steps; the skill adds instructions, not runtime code.
 
-After `npm install slidepig` (or `npm install` in a generated site), run this
+For a fresh project, `npx slidepig@latest create my-decks --skill` installs the
+skill alongside the working example.
+
+For an existing project, after `npm install slidepig`, run this
 from your project root to install the skill for Codex:
 
 ```sh

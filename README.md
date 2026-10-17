@@ -17,16 +17,27 @@ slidepig turns typed slide data into one responsive web page: an article for
 readers, a fullscreen slideshow for presenters, and a link to every slide.
 Images, videos, and your own React components come along for the ride.
 
+Ask your coding agent to turn a brief into a deck, or write the slides yourself.
+Built-in layouts keep the first version simple; ordinary slide files make it
+easy to change a title, reorder an idea, or ask your agent for a revision. Bring
+your own brand, generated illustrations, or React components when you need them.
+The library stays small: zero runtime dependencies, with React as a peer.
+
 ## Make your first deck
 
 For a new site:
 
 ```sh
-npx slidepig create my-decks
+npx slidepig@latest create my-decks --skill
 cd my-decks
 npm install
 npm run dev
 ```
+
+The command copies a working example directly from the package. `--skill`
+also copies the bundled agent skill into `.agents/skills/slidepig/`. Ask your
+coding agent to read that skill and customize `src/decks/welcome.ts`, or edit
+the deck yourself. Omit `--skill` for a minimal project without agent files.
 
 Open the local URL, then edit the deck in `src/decks/`. To add another:
 

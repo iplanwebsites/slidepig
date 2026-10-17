@@ -117,6 +117,7 @@ export const defaultControlIcons = {
   menu: <EllipsisIcon />,
   close: <CloseIcon />,
   copy: <CopyIcon />,
+  openInNewPage: <ArrowUpRightIcon />,
   enterFullscreen: <MaximizeIcon />,
   leaveFullscreen: <MinimizeIcon />,
 };

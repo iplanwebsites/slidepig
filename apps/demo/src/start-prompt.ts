@@ -1,0 +1,8 @@
+/** One source for the visible prompt and clipboard content (the textarea). */
+export const startPrompt = `Create a fresh slidepig presentation project in a new directory named my-decks (choose another name if it already exists; do not overwrite files).
+
+1. Check that Node.js 22.12+ and npm are available. Run npx slidepig@latest create my-decks --skill, then cd my-decks and npm install. The create command copies a working example site and installs the slidepig skill in .agents/skills/slidepig/SKILL.md; npm install installs slidepig, React, and the build tools.
+2. Read .agents/skills/slidepig/SKILL.md and follow it. If your agent uses a different skill directory, install the same bundled folder from node_modules/slidepig/skills/slidepig there, or read the file directly.
+3. Use the skill to turn src/decks/welcome.ts into a short, polished presentation. Use the topic, audience, and goal I have supplied; ask for any missing essentials before drafting. Start with a simple outline and one main idea per slide. Use my brand assets when supplied. Preserve the reading and presentation modes; use real content and avoid invented facts.
+4. Keep the deck easy to edit: prefer built-in layouts and plain slide data, with custom React or CSS only where useful. Explain how to ask for a revision or edit a title directly. If I request generated images, use an available image tool or ask me to supply the files; do not invent asset URLs.
+5. Run npm run typecheck and npm run build, fix any errors, then start npm run dev and share the local preview URL. Tell me which deck file to edit and how to present it with F. Leave deployment until I request it.`;

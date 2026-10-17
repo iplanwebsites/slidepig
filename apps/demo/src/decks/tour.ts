@@ -113,15 +113,15 @@ export default defineDeck({
       tone: "dark",
       background: "night",
       body: [
-        "slidepig is a small React library that turns typed slide data into a single web page. Visitors scroll it like an article. Presenters press F and the same page becomes a full-screen slideshow.",
-        "No export step, no PDF, no second copy that drifts out of date. The link you send before the meeting is the deck you present in it.",
+        "slidepig is a lightweight React library for presentations. Build a deck with your coding agent or write simple slide data yourself. Share a page people can read, then press F to present it as slides.",
+        "The link you send before the meeting is the deck you present in it. Your content stays in your project, ready for the next edit.",
       ],
     },
     {
       id: "why",
       nav: "Why not slides?",
       eyebrow: "The problem",
-      title: "Slide files are bad web pages. Web pages are bad slides.",
+      title: "A presentation people can read after the meeting.",
       layout: "story",
       tone: "paper",
       background: "paper",
@@ -134,6 +134,30 @@ export default defineDeck({
       media: ["art-modes"],
     },
     {
+      id: "agent",
+      nav: "Make it with your agent",
+      title: "A brief, a deck, a few small edits.",
+      layout: "rows",
+      body: [
+        "The bundled skill teaches your coding agent the slide format, layouts, styling, and checks. Start with a brief, then keep refining the same slide files.",
+      ],
+      items: [
+        {
+          title: "Give it a direction",
+          text: "Share your topic, audience, goal, and any brand assets. Ask for a short outline before the full deck.",
+        },
+        {
+          title: "Ask for a revision",
+          text: "Try: ‘Shorten the intro and make the next steps a timeline.’ Or edit a title directly in the slide file.",
+        },
+        {
+          title: "Make it yours",
+          text: "Add screenshots or illustrations from your preferred image tool. Custom React components can bring a chart or working demo into the presentation.",
+        },
+      ],
+      links: [{ label: "Start with the agent prompt", href: "/#start" }],
+    },
+    {
       id: "how",
       nav: "How it works",
       eyebrow: "The model",
@@ -141,14 +165,14 @@ export default defineDeck({
       layout: "story",
       body: [
         "You describe slides as plain objects: an id, a title, some paragraphs, a layout, and the media they show. `defineDeck` infers every media id, theme and background name, so a typo is a type error instead of a blank square on stage.",
-        "`<Deck>` renders them. Layouts cover the shapes a pitch needs: hero, story, rows, timeline, metric, case, groups, statement and closing. Code listings like this one are built in. When nothing fits, pass any React node as a slide's `visual`, or take over the slide entirely with `render`.",
+        "`<Deck>` renders them with built-in layouts for text, lists, timelines, and more. Use a React component as a slide’s `visual` when you need a chart or demo. Custom layouts and CSS can stay alongside your deck.",
       ],
       code: {
         filename: "deck.ts",
         source: `import { defineDeck } from "slidepig";
 
 export default defineDeck({
-  title: "Our seed round",
+  title: "Our next project",
   backgrounds: {
     night: { src: "/art/night.jpg" },
   },
@@ -168,26 +192,26 @@ export default defineDeck({
     {
       id: "numbers",
       nav: "In numbers",
-      eyebrow: "Proof, not promises",
-      title: "Extracted from decks that already shipped.",
+      eyebrow: "A small library",
+      title: "Small enough to get out of the way.",
       layout: "metric",
       theme: "plum",
       background: "paper",
       body: [
-        "slidepig did not start as a framework. It is the part two real pitch decks turned out to share, pulled out once the second deck proved which parts were mechanics and which were content.",
+        "slidepig grew out of two real pitch decks. The library keeps their shared mechanics small; your content, visuals, and custom components stay in your project.",
       ],
       stats: [
-        { value: "2", label: "pitch decks it was extracted from" },
+        { value: "~15 KB", label: "gzipped deck component" },
         {
-          value: "−89%",
-          label: "image weight on the first deck after the asset pipeline",
+          value: "~8 KB",
+          label: "gzipped CSS",
         },
         { value: "0", label: "runtime dependencies beyond React" },
       ],
       details: [
         {
-          title: "Why the image number matters",
-          text: "Pitch decks are image-heavy and get opened on hotel Wi-Fi. The asset pipeline turned 29 MB of source art into 3.2 MB delivered to a modern browser, without anyone resizing a file by hand.",
+          title: "Images can stay light too",
+          text: "The optional asset pipeline creates AVIF and WebP derivatives and blur placeholders. The deck preloads the next slide’s images before you advance. Build tools load only in Node, not in the browser.",
         },
       ],
     },
@@ -380,7 +404,7 @@ export default defineDeck({
         {
           label: "Start a site",
           href: "/guide",
-          note: "npx slidepig create my-decks",
+          note: "A starter project and bundled agent skill",
         },
       ],
     },

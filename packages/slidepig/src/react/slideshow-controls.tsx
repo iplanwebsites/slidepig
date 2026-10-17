@@ -11,6 +11,7 @@ export type SlideshowControlIcons = Partial<
     | "menu"
     | "close"
     | "copy"
+    | "openInNewPage"
     | "enterFullscreen"
     | "leaveFullscreen",
     ReactNode
@@ -31,6 +32,7 @@ export type SlideshowControlLabels = {
   presentingMenuHeading: string;
   jumpToSlide: string;
   copyLink: string;
+  openInNewPage: string;
   enterFullscreen: string;
   leaveFullscreen: string;
   backToReading: string;
@@ -54,6 +56,7 @@ const DEFAULT_LABELS: SlideshowControlLabels = {
   presentingMenuHeading: "Slideshow",
   jumpToSlide: "Jump to section",
   copyLink: "Copy section link",
+  openInNewPage: "Open in a new page",
   enterFullscreen: "Enter fullscreen",
   leaveFullscreen: "Leave fullscreen",
   backToReading: "Back to reading",
@@ -94,6 +97,17 @@ export function SlideshowControls({
   const menu = useRef<HTMLDivElement>(null);
   const [controlsVisible, setControlsVisible] = useState(true);
   const [keyboardHidden, setKeyboardHidden] = useState(false);
+  const [standaloneUrl, setStandaloneUrl] = useState("");
+
+  useEffect(() => {
+    // Comparing window references also works with a cross-origin parent.
+    if (window.self === window.top) return;
+    const url = new URL(window.location.href);
+    if (controller.activeSlide) {
+      url.hash = encodeURIComponent(controller.activeSlide.id);
+    }
+    setStandaloneUrl(url.href);
+  }, [controller.activeSlide?.id]);
 
   useEffect(() => {
     setControlsVisible(true);
@@ -280,6 +294,18 @@ export function SlideshowControls({
           ))}
         </nav>
         <div className="sp-ui-popover-actions">
+          {standaloneUrl && (
+            <a
+              className="sp-ui-button"
+              href={standaloneUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeMenu}
+            >
+              <span aria-hidden="true">{icons?.openInNewPage ?? "↗"}</span>
+              {labels.openInNewPage}
+            </a>
+          )}
           <button
             type="button"
             className="sp-ui-button"

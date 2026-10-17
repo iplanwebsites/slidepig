@@ -7,6 +7,8 @@ by a Cloudflare Worker. Live at <https://slidepig.com>.
 src/decks/*.ts(x)  the decks: data, plus components, layouts and CSS where wanted (mix.tsx)
 src/home.tsx       public homepage: brand, quick start, examples, license
 public/brand.css  homepage-only styles, scoped to .sp-home
+public/start.js   clipboard button with a selectable-prompt fallback
+src/start-prompt.ts  agent setup instructions copied by the primary CTA
 src/site.ts        defineSite: title, home page, which decks, image manifest
 vite.config.ts     slidepigSite() (plus the monorepo-only source conditions)
 worker/index.ts    export { default } from "slidepig/site/worker"

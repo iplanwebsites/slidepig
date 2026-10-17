@@ -9,9 +9,10 @@ export default defineSite({
   home: {
     title: "Decks that are web pages.",
     description:
-      "Write once. Scroll to read. Press F to present. A small React library for decks that live on the web.",
+      "A lightweight React library for presentations. Build with your coding agent or edit simple slide files. Share one page to read or present.",
     render: Home,
     stylesheets: ["/brand.css"],
+    scripts: ["/start.js"],
   },
   favicon: "🐷",
   // Override for a preview deployment; production links use slidepig.com.

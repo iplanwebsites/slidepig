@@ -217,6 +217,7 @@ html.sp-ui-presentation-open {
 }
 
 .sp-ui-popover-actions .sp-ui-button {
+  text-decoration: none;
   justify-content: flex-start;
   min-height: 40px;
 }

@@ -26,7 +26,10 @@ try backgrounds, themes and colors, then copy the settings back into the deck.
 
 ## Coding agents
 
-After `npm install`, install the bundled slidepig skill for Codex from this
+If you created this site with `--skill`, the bundled skill is already in
+`.agents/skills/slidepig/`. Ask your agent to read its `SKILL.md`.
+
+Otherwise, after `npm install`, install the bundled slidepig skill for Codex from this
 project's root:
 
 ```sh

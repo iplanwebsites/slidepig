@@ -57,7 +57,7 @@ export function createRenderer(site: Site) {
       const home = site.home || {};
       return {
         status: 200,
-        // Plain links: stylesheets only, no JavaScript.
+        // The default listing stays script-free; custom homes can opt in.
         html: renderDocument({
           title: site.title,
           description: site.description,
@@ -65,6 +65,7 @@ export function createRenderer(site: Site) {
           canonical: canonical("/"),
           robots: site.robots,
           stylesheets: [...assets.stylesheets, ...(home.stylesheets ?? [])],
+          scripts: home.scripts,
           head,
           body: home.render
             ? home.render({

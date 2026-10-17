@@ -19,13 +19,13 @@ export default defineDeck({
       eyebrow: "01 · A place for your ideas",
       title: "Start with a little piggy.",
       body: [
-        "The scaffold gives you a site with a deck, an image pipeline, and a Cloudflare Worker configuration. You own all of its source files.",
-        "Run the commands below, then open the local URL printed by Vite. The page is server-rendered in development, just like the published version.",
+        "The scaffold copies a working example from the package, including a deck, an image pipeline, and a Cloudflare Worker configuration. The --skill option also installs the agent instructions in .agents/skills/slidepig/SKILL.md. Ask your coding agent to read that file and customize the deck.",
+        "Give your agent a topic, audience, goal, and any brand assets. For example: ‘Make a six-slide product demo for our team. Start with an outline, use our screenshots, and finish with next steps.’ Run the commands below if you prefer to set up the project yourself.",
       ],
       code: {
         filename: "terminal",
         source:
-          "npx slidepig create my-decks\ncd my-decks\nnpm install\nnpm run dev",
+          "npx slidepig@latest create my-decks --skill\ncd my-decks\nnpm install\nnpm run dev",
       },
     },
     {
@@ -34,7 +34,7 @@ export default defineDeck({
       title: "One file. No registration form.",
       body: [
         "Run `npm run new -- my-pitch` to create `src/decks/my-pitch.ts`. Its filename becomes its URL: `/my-pitch/` in the starter. Each slide needs an id and a title. Give the id a stable name so shared links keep working.",
-        "Write plain text in body paragraphs, use built-in layouts, or use a .tsx deck for React content and custom layouts. Assets in public/ are available at the root: public/photo.jpg becomes /photo.jpg.",
+        "Edit a title or paragraph directly, or ask your agent: ‘Shorten the intro and turn the next steps into a timeline.’ Start with plain text and built-in layouts. Use a .tsx deck when you need React content or a custom layout.",
       ],
       code: {
         filename: "src/decks/my-pitch.ts",
@@ -60,7 +60,7 @@ export default defineDeck({
       title: "Try the look before editing the code.",
       body: [
         "On localhost, press D to open the visual tuner. Try backgrounds, overlays, themes, and accents. Copy the resulting settings into your deck file to keep them; the tuner does not save your source.",
-        "Add images and videos to deck.media and reference their ids from slides. `npm run build` optimizes configured images and prerenders the pages. Custom components, layouts, and CSS can live alongside the deck.",
+        "Bring your own screenshots, brand colors, and illustrations. If you generate art with an image tool, save it in public/ and ask your agent to add it to deck.media. For example, public/photo.jpg becomes /photo.jpg. Reference media ids from slides; `npm run build` optimizes configured images and prerenders the pages.",
       ],
       links: [
         {

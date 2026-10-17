@@ -47,5 +47,46 @@ try {
   // Expected: the creator refuses to write into a non-empty directory.
 }
 
+// The default stays minimal; agents opt in to copying the bundled skill.
+if (existsSync(path.join(target, ".agents")))
+  fail("default scaffold installed a skill");
+const agentTarget = path.join(parent, "Agent Decks");
+execFileSync("node", [cli, "create", "--skill", agentTarget], {
+  stdio: "pipe",
+});
+const installedSkill = path.join(
+  agentTarget,
+  ".agents/skills/slidepig/SKILL.md",
+);
+const bundledSkill = path.join(here, "../skills/slidepig/SKILL.md");
+if (readFileSync(installedSkill, "utf8") !== readFileSync(bundledSkill, "utf8"))
+  fail("the scaffolded skill does not match the bundled skill");
+if (!existsSync(path.join(agentTarget, "src/decks/welcome.ts")))
+  fail("agent scaffold is missing the example deck");
+
+const help = execFileSync("node", [cli, "create", "--help"], {
+  cwd: parent,
+  encoding: "utf8",
+});
+if (!help.includes("--skill")) fail("create help is missing the skill option");
+if (existsSync(path.join(parent, "--help"))) fail("help created a directory");
+for (const args of [["--unknown"], ["one", "two"]]) {
+  let rejected = false;
+  try {
+    execFileSync("node", [cli, "create", ...args], {
+      cwd: parent,
+      stdio: "pipe",
+    });
+  } catch {
+    rejected = true;
+  }
+  if (!rejected) fail(`unexpected create arguments were accepted: ${args}`);
+}
+if (
+  existsSync(path.join(parent, "--unknown")) ||
+  existsSync(path.join(parent, "one"))
+)
+  fail("invalid create arguments wrote files");
+
 rmSync(parent, { recursive: true, force: true });
 console.log("[slidepig] smoke test passed");

@@ -8,7 +8,20 @@ import { fileURLToPath } from "node:url";
 const template = fileURLToPath(new URL("../template", import.meta.url));
 
 export async function runCreateCommand(argv: string[]): Promise<void> {
-  const target = path.resolve(argv[0] ?? "my-presentations");
+  if (argv.includes("--help") || argv.includes("-h")) {
+    console.log(`slidepig create [directory] [--skill]
+
+Copy a working example site from the package (default: my-presentations).
+  --skill    also install the bundled skill in .agents/skills/slidepig
+
+Then run npm install and npm run dev in the new directory.`);
+    return;
+  }
+  const withSkill = argv.includes("--skill");
+  const positional = argv.filter((arg) => arg !== "--skill");
+  if (positional.length > 1 || positional.some((arg) => arg.startsWith("-")))
+    throw new Error("Usage: slidepig create [directory] [--skill]");
+  const target = path.resolve(positional[0] ?? "my-presentations");
   const name =
     path
       .basename(target)
@@ -35,9 +48,17 @@ export async function runCreateCommand(argv: string[]): Promise<void> {
     );
   }
 
+  if (withSkill) {
+    await cp(
+      fileURLToPath(new URL("../skills/slidepig", import.meta.url)),
+      path.join(target, ".agents/skills/slidepig"),
+      { recursive: true },
+    );
+  }
+
   const relative = path.relative(process.cwd(), target) || ".";
   console.log(`
-Created ${relative}
+Created ${relative}${withSkill ? " with the slidepig agent skill" : ""}
 
   cd ${relative}
   npm install

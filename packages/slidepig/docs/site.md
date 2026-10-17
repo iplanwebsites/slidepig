@@ -8,7 +8,9 @@ Try the [live examples](https://slidepig.com) or follow the
 [getting started guide](https://slidepig.com/guide). Site tooling requires
 Node.js 22.12+; deck components require React 19+.
 
-The quickest start is `npx slidepig create my-decks`. By hand, it is three
+The quickest start is `npx slidepig@latest create my-decks --skill`. This copies
+a working example and the agent skill from the package. Omit `--skill` if you
+do not need agent instructions. By hand, it is three
 files, plus the build tools as dev dependencies:
 
 ```sh
@@ -60,25 +62,26 @@ export { default } from "slidepig/site/worker";
   - a deck page is missing one of its slides or the client script,
   - the home page does not link to every deck.
 
-The home page ships no JavaScript. Deck pages load one script that hydrates
+The default home page ships no JavaScript. A custom home can opt into its own
+module scripts with `home.scripts`. Deck pages load one script that hydrates
 the prerendered markup.
 
 ## `defineSite` options
 
-| Option          | Purpose                                                                              |
-| --------------- | ------------------------------------------------------------------------------------ |
-| `title`         | site title, also the home page heading                                               |
-| `description`   | home page description and meta description                                           |
-| `decks`         | `{ slugOrPath: deck }`, usually from `import.meta.glob`                              |
-| `media`         | the `slidepig assets` manifest, for optimized images                                 |
-| `home`          | `{ title, description, render, stylesheets }`, or `false` for one deck served at `/` |
-| `trailingSlash` | `true`: decks at `/<slug>/` instead of `/<slug>` (the other form redirects)          |
-| `list`          | `false`: no page lists the decks (`/` is a 404, the 404 names none)                  |
-| `deckProps`     | props for every `<Deck>`: `tuner`, `labels`, `sidebar`…                              |
-| `robots`        | e.g. `"noindex, nofollow"` for private pitches                                       |
-| `origin`        | absolute origin, enables canonical and `og:url` tags                                 |
-| `favicon`       | an emoji or a URL                                                                    |
-| `lang`          | home page language; decks declare their own                                          |
+| Option          | Purpose                                                                                       |
+| --------------- | --------------------------------------------------------------------------------------------- |
+| `title`         | site title, also the home page heading                                                        |
+| `description`   | home page description and meta description                                                    |
+| `decks`         | `{ slugOrPath: deck }`, usually from `import.meta.glob`                                       |
+| `media`         | the `slidepig assets` manifest, for optimized images                                          |
+| `home`          | `{ title, description, render, stylesheets, scripts }`, or `false` for one deck served at `/` |
+| `trailingSlash` | `true`: decks at `/<slug>/` instead of `/<slug>` (the other form redirects)                   |
+| `list`          | `false`: no page lists the decks (`/` is a 404, the 404 names none)                           |
+| `deckProps`     | props for every `<Deck>`: `tuner`, `labels`, `sidebar`…                                       |
+| `robots`        | e.g. `"noindex, nofollow"` for private pitches                                                |
+| `origin`        | absolute origin, enables canonical and `og:url` tags                                          |
+| `favicon`       | an emoji or a URL                                                                             |
+| `lang`          | home page language; decks declare their own                                                   |
 
 Private pitches, each reached only by its own link:
 
@@ -122,6 +125,10 @@ home: {
   ),
 },
 ```
+
+`scripts: ["/home.js"]` optionally loads a home-only module from `public/`,
+for enhancements such as a clipboard button. These scripts are validated
+during builds and are not added to deck or error pages.
 
 `render` receives `DeckIndexProps`: title, description, deck entries, and the
 image resolver. Return a complete page body with one `<main>` and one `<h1>`.

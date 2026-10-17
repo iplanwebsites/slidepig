@@ -1,4 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
+import { parseHTML } from "linkedom";
 import { renderToStaticMarkup } from "react-dom/server";
 import { SlideshowControls } from "./slideshow-controls";
 import { useSlideshow } from "./use-slideshow";
@@ -60,6 +63,70 @@ describe("slideshow React layer", () => {
     expect(popoverTarget).toMatch(/^sp-ui-tools-/);
     expect(html).toContain(`id="${popoverTarget}"`);
   });
+
+  it.each([false, true])(
+    "offers a standalone link only inside an iframe (framed: %s)",
+    async (framed) => {
+      const { window } = parseHTML(
+        "<html><body><div id='root'></div></body></html>",
+      );
+      const top = framed
+        ? new Proxy(
+            {},
+            {
+              get: () => {
+                throw new Error("Cross-origin access");
+              },
+            },
+          )
+        : window;
+      Object.defineProperties(window, {
+        self: { configurable: true, value: window },
+        top: { configurable: true, value: top },
+        location: {
+          configurable: true,
+          value: { href: "https://example.com/deck?lang=en#opening" },
+        },
+      });
+      vi.stubGlobal("window", window);
+      vi.stubGlobal("document", window.document);
+      vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+      const container = window.document.getElementById("root")!;
+      const root = createRoot(container);
+      try {
+        await act(async () => {
+          root.render(<SlideshowControls controller={createController()} />);
+        });
+        const link = container.querySelector('a[target="_blank"]');
+        expect(Boolean(link)).toBe(framed);
+        if (framed) {
+          expect(link?.textContent).toContain("Open in a new page");
+          expect(link?.getAttribute("href")).toBe(
+            "https://example.com/deck?lang=en#opening",
+          );
+          expect(link?.getAttribute("rel")).toBe("noopener noreferrer");
+          await act(async () => {
+            root.render(
+              <SlideshowControls
+                controller={{
+                  ...createController(),
+                  presenting: true,
+                  activeIndex: 1,
+                  activeSlide: slides[1],
+                }}
+              />,
+            );
+          });
+          expect(
+            container.querySelector('a[target="_blank"]')?.getAttribute("href"),
+          ).toBe("https://example.com/deck?lang=en#instrument-design");
+        }
+      } finally {
+        await act(async () => root.unmount());
+        vi.unstubAllGlobals();
+      }
+    },
+  );
 
   it("can render only the current slide number", () => {
     const controller = { ...createController(), presenting: true };

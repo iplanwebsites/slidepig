@@ -32,6 +32,8 @@ export type SiteConfig = {
         render?: (props: DeckIndexProps) => ReactNode;
         /** Home-only stylesheets, e.g. a CSS file in public/. */
         stylesheets?: readonly string[];
+        /** Optional home-only module scripts; the default listing needs none. */
+        scripts?: readonly string[];
       };
   /**
    * `false` publishes no page that lists the decks: `/` is not found and the

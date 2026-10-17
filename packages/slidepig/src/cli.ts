@@ -5,7 +5,7 @@ const USAGE = `
 slidepig <command>
 
 Commands
-  create [dir]     start a presentation site in dir (default: my-presentations)
+  create [dir]     copy an example site (add --skill for agent instructions)
   new <slug>       add src/decks/<slug>.ts to the current site
   assets           build optimized image derivatives (needs sharp)
 

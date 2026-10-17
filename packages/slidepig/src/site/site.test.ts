@@ -188,3 +188,19 @@ describe("custom home pages", () => {
     expect(render("/404.html", assets)?.html).not.toContain('href="/pitch"');
   });
 });
+
+it("loads opt-in homepage scripts without adding them to deck or error pages", () => {
+  const { render } = createRenderer(
+    defineSite({
+      title: "Decks",
+      decks: { pitch },
+      home: { scripts: ["/start.js"] },
+    }),
+  );
+  expect(render("/", assets)?.html).toContain(
+    '<script type="module" src="/start.js"></script>',
+  );
+  expect(render("/", assets)?.html).not.toContain('src="/app.js"');
+  expect(render("/pitch", assets)?.html).not.toContain('src="/start.js"');
+  expect(render("/404.html", assets)?.html).not.toContain('src="/start.js"');
+});

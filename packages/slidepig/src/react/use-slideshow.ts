@@ -251,7 +251,24 @@ export function useSlideshow({
       void document.exitFullscreen().catch(() => {});
   }, []);
 
+  const openOutsideFrame = useCallback(() => {
+    if (
+      window.self === window.top ||
+      (document.fullscreenEnabled && rootRef.current?.requestFullscreen)
+    )
+      return false;
+    const slide = slides[activeIndex];
+    if (!slide) return false;
+    window.open(
+      currentSlideUrl(window.location.href, slide.id),
+      "_blank",
+      "noopener,noreferrer",
+    );
+    return true;
+  }, [activeIndex, slides]);
+
   const toggleFullscreen = useCallback(async () => {
+    if (openOutsideFrame()) return;
     try {
       if (document.fullscreenElement === rootRef.current)
         await document.exitFullscreen();
@@ -268,17 +285,19 @@ export function useSlideshow({
           DEFAULT_MESSAGES.fullscreenUnavailable,
       );
     }
-  }, [messages?.fullscreenUnavailable]);
+  }, [messages?.fullscreenUnavailable, openOutsideFrame]);
 
   const start = useCallback(() => {
     const activeId = slideIds[activeIndex];
     if (!activeId) return;
+    if (requestFullscreenOnStart && openOutsideFrame()) return;
     setHash(activeId);
     setPresenting(true);
     setManualLink("");
     if (requestFullscreenOnStart) void toggleFullscreen();
   }, [
     activeIndex,
+    openOutsideFrame,
     requestFullscreenOnStart,
     setHash,
     slideIds,
