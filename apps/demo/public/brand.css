@@ -4,6 +4,7 @@
   --sp-home-muted: #765e68;
   --sp-home-paper: #fff8fa;
   --sp-home-accent: #993b5d;
+  --sp-home-pink: #f7a8c4;
   --sp-home-line: #e7d7dd;
   color: var(--sp-home-ink);
   background: var(--sp-home-paper);
@@ -37,8 +38,7 @@
   margin: 0;
 }
 .sp-home h1,
-.sp-home h2,
-.sp-home-mode-title {
+.sp-home h2 {
   font-family:
     "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia,
     serif;
@@ -119,8 +119,8 @@
 }
 .sp-home-hero {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 96px;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 72px;
   align-items: center;
   padding: 100px 0 104px;
 }
@@ -167,36 +167,45 @@
   font-size: 14px;
   font-weight: 500;
 }
-.sp-home-modes a {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px 20px;
-  padding: 30px 0;
-  border-top: 1px solid var(--sp-home-line);
+.sp-home-poster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--sp-home-pink);
+  border: 2px solid var(--sp-home-ink);
+  border-radius: 10px;
+  box-shadow: 8px 8px 0 var(--sp-home-ink);
+  transform: rotate(3deg);
   text-decoration: none;
+  padding: 36px 32px 0;
 }
-.sp-home-mode-title {
-  font-size: clamp(38px, 4.5vw, 60px);
+.sp-home-poster:hover {
+  transform: rotate(1deg);
 }
-.sp-home-modes a span:nth-child(2) {
-  grid-column: 1;
-  color: var(--sp-home-muted);
-  font-size: 14px;
+.sp-home-pig {
+  display: block;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  font-size: clamp(140px, 17vw, 220px);
+  line-height: 1.25;
+  margin-bottom: 24px;
 }
-.sp-home-modes a span:last-child {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: center;
-  color: var(--sp-home-accent);
+.sp-home-poster-title {
+  font-size: clamp(38px, 4vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+  font-weight: 800;
+  text-align: center;
 }
-.sp-home-modes a:hover .sp-home-mode-title {
-  color: var(--sp-home-accent);
-}
-.sp-home-modes > p {
-  border-top: 1px solid var(--sp-home-line);
-  padding-top: 20px;
-  font-size: 13px;
-  color: var(--sp-home-muted);
+.sp-home-poster-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+  border-top: 1px solid #681e3b55;
+  margin-top: 32px;
+  padding: 20px 0;
+  font-size: 16px;
 }
 .sp-home-section {
   padding: 64px 0;
@@ -375,11 +384,13 @@
     padding: 56px 0;
     gap: 44px;
   }
-  .sp-home-modes a {
-    padding: 22px 0;
+  .sp-home-poster {
+    max-width: 420px;
+    width: calc(100% - 16px);
+    justify-self: center;
   }
-  .sp-home-mode-title {
-    font-size: 38px;
+  .sp-home-pig {
+    font-size: 180px;
   }
   .sp-home-section {
     padding: 44px 0;

@@ -36,10 +36,12 @@ A few lines in the pen:
 The public site uses a pale blush background, dark plum text, and restrained
 rose accents. Serif headlines pair with a quiet system sans-serif for body
 copy. Use regular heading weights, readable line lengths, generous space,
-and fine rules to establish hierarchy. Keep the pig in the wordmark.
+and fine rules to establish hierarchy. Keep the pig in the wordmark and the
+large pink hero card: an oversized pig emoji, a slight tilt, and a solid shadow
+give the main hero its character. Pair it with the refined serif headline.
 
-Prefer open sections and simple linked rows over cards, colored panels,
-shadows, and rotation. The brand CSS lives in `apps/demo`; consumer decks
+Below the hero, prefer open sections and simple linked rows over repeated
+cards and colored panels. The brand CSS lives in `apps/demo`; consumer decks
 bring their own identities. Use system fonts and avoid adding font downloads,
 icon libraries, or runtime dependencies for branding.
 

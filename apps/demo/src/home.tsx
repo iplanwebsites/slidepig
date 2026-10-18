@@ -88,23 +88,23 @@ export function Home({ decks }: DeckIndexProps) {
               />
             </details>
           </div>
-          <div
-            className="sp-home-modes"
-            role="group"
-            aria-label="One page, two modes"
+          <a
+            className="sp-home-poster"
+            href="/tour"
+            aria-label="Open the slidepig tour"
           >
-            <a href="/tour">
-              <span className="sp-home-mode-title">Read it.</span>
-              <span>A page to scroll, on any screen.</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-            <a href="/tour#hello">
-              <span className="sp-home-mode-title">Present it.</span>
-              <span>The same page, ready for the room.</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-            <p>One page. One link. Both ways.</p>
-          </div>
+            <span className="sp-home-pig" aria-hidden="true">
+              🐷
+            </span>
+            <span className="sp-home-poster-title">
+              Read it.
+              <br />
+              Present it.
+            </span>
+            <span className="sp-home-poster-bottom">
+              One page. Two modes. <span aria-hidden="true">↗</span>
+            </span>
+          </a>
         </section>
         <section className="sp-home-section" aria-labelledby="why-title">
           <h2 id="why-title">
